@@ -25,6 +25,20 @@ export const metadata: Metadata = {
     title: 'CW Soundlabs | Chicago Recording Studio',
     description: "Chicago's premier recording studio. Book your session today.",
     type: 'website',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'CW Soundlabs — Chicago Recording Studio',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CW Soundlabs | Chicago Recording Studio',
+    description: "Chicago's premier recording studio. Book your session today.",
+    images: ['/og-image.png'],
   },
 }
 
