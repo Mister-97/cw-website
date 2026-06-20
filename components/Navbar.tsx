@@ -27,8 +27,8 @@ export default function Navbar() {
     setMobileOpen(false)
   }, [pathname])
 
-  // On hero (home page, not scrolled) — transparent with white text
-  // After scroll or on inner pages — white bg with black text
+  // On hero (home page, not scrolled) transparent with white text
+  // After scroll or on inner pages white bg with black text
   const isHero = pathname === '/' && !scrolled
   const textColor = isHero ? 'text-white' : 'text-black'
   const linkHover = isHero ? 'hover:text-cw-red' : 'hover:text-cw-red'
@@ -46,7 +46,7 @@ export default function Navbar() {
         <Link href="/" className="flex items-center">
           <Image
             src="/logo.png"
-            alt="CW Soundlabs"
+            alt="CW Soundlab"
             width={120}
             height={60}
             className="object-contain"

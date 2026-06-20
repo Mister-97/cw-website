@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Booking Confirmed | CW Soundlabs',
+  title: 'Booking Confirmed | CW Soundlab',
 }
 
 export default function SuccessPage() {
@@ -27,7 +27,7 @@ export default function SuccessPage() {
             You&apos;re Booked!
           </h1>
           <p className="font-body text-gray-500 leading-relaxed mb-10 text-sm max-w-sm mx-auto">
-            Your session at CW Soundlabs is confirmed. Check your email for booking details.
+            Your session at CW Soundlab is confirmed. Check your email for booking details.
             We can&apos;t wait to create with you.
           </p>
 

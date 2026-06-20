@@ -3,9 +3,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'About | CW Soundlabs Chicago',
+  title: 'About | CW Soundlab Chicago',
   description:
-    'Meet Wizz Wizzet and Chubbsdaproducer — the Chicago producers behind CW Soundlabs.',
+    'Meet Wizz Wizzet and Chubbsdaproducer, the Chicago producers behind CW Soundlab.',
 }
 
 const credits = [
@@ -20,7 +20,7 @@ export default function AboutPage() {
       <div className="bg-black pt-28 pb-0 px-4 overflow-hidden">
         <div className="max-w-6xl mx-auto pb-14">
           <p className="text-cw-red font-heading tracking-[0.4em] uppercase text-xs mb-6">
-            CW Soundlabs · Chicago, IL
+            CW Soundlab · Chicago, IL
           </p>
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 items-end">
             <h1 className="font-heading leading-none text-white">
@@ -79,7 +79,7 @@ export default function AboutPage() {
             <div className="space-y-4 font-body text-gray-500 text-sm leading-relaxed">
               <p>
                 Wizz Wizzet is one of Chicago&apos;s most in-demand studio engineers and the
-                technical backbone behind CW Soundlabs. With an ear for detail and a passion for
+                technical backbone behind CW Soundlab. With an ear for detail and a passion for
                 pushing artists to their best takes, he&apos;s built a reputation for making
                 sessions run smooth and sound even better.
               </p>
@@ -114,7 +114,7 @@ export default function AboutPage() {
           <div className="flex items-center gap-3 border border-cw-red/40 px-5 py-2">
             <div className="w-1.5 h-1.5 bg-cw-red rounded-full" />
             <p className="text-cw-red font-heading text-xs tracking-[0.4em] uppercase whitespace-nowrap">
-              CW Soundlabs
+              CW Soundlab
             </p>
             <div className="w-1.5 h-1.5 bg-cw-red rounded-full" />
           </div>
@@ -126,7 +126,7 @@ export default function AboutPage() {
       <section className="max-w-6xl mx-auto px-4 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 border-2 border-black overflow-hidden">
 
-          {/* Bio — flipped on desktop */}
+          {/* Bio flipped on desktop */}
           <div className="bg-black p-10 lg:p-14 flex flex-col justify-center order-2 lg:order-1">
             <span className="font-heading text-[80px] leading-none text-white/[0.04] select-none -mt-4 mb-2">
               02
@@ -139,12 +139,12 @@ export default function AboutPage() {
             </h2>
             <div className="space-y-4 font-body text-white/50 text-sm leading-relaxed">
               <p>
-                Chubbsdaproducer is the creative engine behind CW Soundlabs&apos;s production side.
+                Chubbsdaproducer is the creative engine behind CW Soundlab&apos;s production side.
                 Known for his versatile sound and deep understanding of what makes a beat hit,
                 he&apos;s crafted records for artists across Chicago and beyond.
               </p>
               <p>
-                Whether it&apos;s trap, drill, R&B, or something entirely his own — Chubbs builds
+                Whether it&apos;s trap, drill, R&amp;B, or something entirely his own, Chubbs builds
                 from the soul. He approaches every session with the same hunger that put him on the
                 map, making sure every artist leaves with something they&apos;re proud to play.
               </p>

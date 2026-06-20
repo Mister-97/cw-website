@@ -23,7 +23,7 @@ const features = [
   {
     title: 'All Levels Welcome',
     description:
-      'First verse or fifteenth album — our engineers bring out the best in every artist who walks through the door.',
+      'First verse or fifteenth album our engineers bring out the best in every artist who walks through the door.',
   },
 ]
 
@@ -40,13 +40,13 @@ export default function HomePage() {
         {/* Studio background photo */}
         <Image
           src="/studio-hero.png"
-          alt="CW Soundlabs studio"
+          alt="CW Soundlab studio"
           fill
           priority
           className="object-cover object-center"
           sizes="100vw"
         />
-        {/* Dark overlay — strong enough for text legibility */}
+        {/* Dark overlay strong enough for text legibility */}
         <div className="absolute inset-0 bg-black/65" />
         {/* Red tint at bottom for transition */}
         <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black/40 to-transparent" />
@@ -54,7 +54,7 @@ export default function HomePage() {
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
           <Image
             src="/logo.png"
-            alt="CW Soundlabs"
+            alt="CW Soundlab"
             width={520}
             height={260}
             className="object-contain mx-auto drop-shadow-2xl mt-4 w-[85vw] sm:w-[520px]"
@@ -123,7 +123,7 @@ export default function HomePage() {
           {/* Bento grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
 
-            {/* ── Card 1: Early Bird — narrow left ── */}
+            {/* ── Card 1: Early Bird narrow left ── */}
             {(() => {
               const s = featuredServices[0]
               return s ? (
@@ -159,7 +159,7 @@ export default function HomePage() {
               ) : null
             })()}
 
-            {/* ── Card 2: 4hr — featured, center ── */}
+            {/* ── Card 2: 4hr featured, center ── */}
             {(() => {
               const s = featuredServices[1]
               return s ? (
@@ -278,7 +278,7 @@ export default function HomePage() {
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-0">
             <div>
               <p className="text-cw-red font-heading text-xs tracking-[0.45em] uppercase mb-5">
-                Why CW Soundlabs
+                Why CW Soundlab
               </p>
               <h2 className="font-heading leading-none text-white">
                 <span className="block text-5xl md:text-7xl">Built for Artists.</span>
@@ -293,7 +293,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {/* Features — editorial numbered list */}
+          {/* Features editorial numbered list */}
           <div className="mt-14">
             {features.map((f, i) => (
               <div
@@ -310,7 +310,7 @@ export default function HomePage() {
                     {f.title}
                   </h3>
                 </div>
-                {/* Description — hidden on mobile, shown md+ */}
+                {/* Description hidden on mobile, shown md+ */}
                 <p className="hidden md:block font-body text-white/40 text-sm leading-relaxed self-center group-hover:text-white/60 transition-colors">
                   {f.description}
                 </p>
@@ -349,7 +349,7 @@ export default function HomePage() {
               <div key={artist.name} className="group relative aspect-square overflow-hidden">
                 <Image
                   src={artist.src}
-                  alt={`${artist.name} — ${artist.project}`}
+                  alt={`${artist.name} ${artist.project}`}
                   fill
                   className="object-cover object-top grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 ease-out"
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
@@ -360,7 +360,7 @@ export default function HomePage() {
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500" />
                 {/* Red border */}
                 <div className="absolute inset-0 border-2 border-transparent group-hover:border-cw-red transition-colors duration-400" />
-                {/* Name — always partially visible, more on hover */}
+                {/* Name always partially visible, more on hover */}
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <p className="font-heading text-white text-base leading-tight drop-shadow-lg">
                     {artist.name}
@@ -408,7 +408,7 @@ export default function HomePage() {
           <div className="mt-10 border-t-2 border-black">
             {[
               { name: 'Quick Song', sub: 'Perfect for singles & freestyles', price: '$65', duration: '1 Hr', href: '/booking?service=quick-song' },
-              { name: 'Early Bird', sub: 'Best value — mornings before 1PM', price: '$80', duration: '2 Hrs', href: '/booking?service=early-bird' },
+              { name: 'Early Bird', sub: 'Best value mornings before 1PM', price: '$80', duration: '2 Hrs', href: '/booking?service=early-bird' },
               { name: 'Mix & Master', sub: 'Radio-ready sound on your tracks', price: '$175', duration: 'Per Song', href: '/booking?service=mix-master' },
               { name: 'Full Day', sub: 'Max time, max output, max value', price: '$400', duration: '8 Hrs', href: '/booking?service=full-day' },
             ].map((item, i) => (

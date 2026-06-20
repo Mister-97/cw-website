@@ -92,7 +92,7 @@ export default function BookingForm() {
       <div className="bg-black pt-20 pb-12 px-4">
         <div className="max-w-2xl mx-auto text-center">
           <p className="text-cw-red font-heading tracking-[0.4em] uppercase text-xs mb-3">
-            CW Soundlabs · Chicago, IL
+            CW Soundlab · Chicago, IL
           </p>
           <h1 className="font-heading text-5xl md:text-6xl text-white">Book a Session</h1>
         </div>

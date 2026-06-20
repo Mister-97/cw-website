@@ -25,7 +25,7 @@ export const services: Service[] = [
   {
     id: 'early-bird',
     name: 'Early Bird Session',
-    description: '2-hour session block at a discounted rate. Must start before 1PM — early bird gets the beat.',
+    description: '2-hour session block at a discounted rate. Must start before 1PM early bird gets the beat.',
     duration: '2 hrs',
     durationMins: 120,
     price: 80,
@@ -79,7 +79,7 @@ export const services: Service[] = [
   {
     id: 'custom-production',
     name: 'Recording + Custom Production',
-    description: 'Bring your vision to life with a complete session that includes custom beat production tailored to your unique sound. Our producers build your beat, then you record — all in one session.',
+    description: 'Bring your vision to life with a complete session that includes custom beat production tailored to your unique sound. Our producers build your beat, then you record all in one session.',
     duration: '2 hrs',
     durationMins: 120,
     price: 200,

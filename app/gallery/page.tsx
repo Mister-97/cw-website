@@ -3,14 +3,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Studio Gallery | CW Soundlabs Chicago',
-  description: 'Take a look inside CW Soundlabs — Chicago recording studio photos.',
+  title: 'Studio Gallery | CW Soundlab Chicago',
+  description: 'Take a look inside CW Soundlab Chicago recording studio photos.',
 }
 
 const photos = [
   {
     src: '/gallery/studio-setup.png',
-    alt: 'CW Soundlabs control room with KRK monitors and dual screens',
+    alt: 'CW Soundlab control room with KRK monitors and dual screens',
     label: 'Control Room',
     span: 'md:col-span-2 md:row-span-2',
   },
@@ -28,7 +28,7 @@ const photos = [
   },
   {
     src: '/gallery/control-room.png',
-    alt: 'CW Soundlabs recording setup with KRK studio monitors',
+    alt: 'CW Soundlab recording setup with KRK studio monitors',
     label: 'Recording Setup',
     span: 'md:col-span-2',
   },
@@ -46,7 +46,7 @@ export default function GalleryPage() {
           <h1 className="font-heading text-6xl md:text-8xl text-white leading-none">Gallery</h1>
           <div className="w-20 h-1 bg-cw-red mx-auto mt-6" />
           <p className="font-body text-white/50 mt-6 text-base max-w-xl mx-auto">
-            Take a look inside CW Soundlabs — where Chicago artists create their sound.
+            Take a look inside CW Soundlab, where Chicago artists create their sound.
           </p>
         </div>
       </div>

@@ -16,13 +16,13 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'CW Soundlabs | Chicago Recording Studio',
+  title: 'CW Soundlab - Chicago Recording Studio',
   description:
-    "Chicago's premier recording studio. Book professional recording sessions, custom beat production, mixing & mastering. CW Soundlabs — where Chicago artists create.",
+    "Chicago's premier recording studio. Book professional recording sessions, custom beat production, mixing and mastering. CW Soundlab is where Chicago artists create.",
   keywords:
-    'recording studio chicago, music studio chicago, CW Soundlabs, beat production chicago, mixing mastering chicago',
+    'recording studio chicago, music studio chicago, CW Soundlab, beat production chicago, mixing mastering chicago',
   openGraph: {
-    title: 'CW Soundlabs | Chicago Recording Studio',
+    title: 'CW Soundlab - Chicago Recording Studio',
     description: "Chicago's premier recording studio. Book your session today.",
     type: 'website',
     images: [
@@ -30,13 +30,13 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'CW Soundlabs — Chicago Recording Studio',
+        alt: 'CW Soundlab - Chicago Recording Studio',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'CW Soundlabs | Chicago Recording Studio',
+    title: 'CW Soundlab - Chicago Recording Studio',
     description: "Chicago's premier recording studio. Book your session today.",
     images: ['/og-image.png'],
   },

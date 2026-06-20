@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: `CW Soundlabs — ${serviceName}`,
+              name: `CW Soundlab ${serviceName}`,
               description: `Session on ${date} at ${time} · Chicago, IL`,
             },
             unit_amount: Math.round(price * 100),

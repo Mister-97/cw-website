@@ -3,9 +3,9 @@ import Link from 'next/link'
 import { services, categories, Service } from '@/lib/services'
 
 export const metadata: Metadata = {
-  title: 'Services & Pricing | CW Soundlabs Chicago',
+  title: 'Services & Pricing | CW Soundlab Chicago',
   description:
-    'Recording sessions, custom beat production, mixing & mastering. View all packages and pricing at CW Soundlabs — Chicago.',
+    'Recording sessions, custom beat production, mixing & mastering. View all packages and pricing at CW Soundlab Chicago.',
 }
 
 const categoryOrder: Service['category'][] = ['recording', 'production', 'post', 'content']
@@ -25,14 +25,14 @@ export default function ServicesPage() {
       <div className="bg-black pt-28 pb-14 px-4">
         <div className="max-w-5xl mx-auto">
           <p className="text-cw-red font-heading tracking-[0.4em] uppercase text-xs mb-5">
-            CW Soundlabs · Chicago, IL
+            CW Soundlab · Chicago, IL
           </p>
           <h1 className="font-heading text-5xl sm:text-6xl md:text-8xl text-white leading-none mb-6">
             Services<br />
             <span className="text-cw-red">&amp; Pricing</span>
           </h1>
           <p className="font-body text-white/40 text-sm leading-relaxed max-w-lg">
-            From quick vocal sessions to full studio days — professional sound for every artist and every budget.
+            From quick vocal sessions to full studio days professional sound for every artist and every budget.
             All sessions include a professional engineer.
           </p>
         </div>

@@ -13,7 +13,7 @@ export default function Footer() {
           <div>
             <Image
               src="/logo.png"
-              alt="CW Soundlabs"
+              alt="CW Soundlab"
               width={140}
               height={70}
               className="object-contain mb-4"
@@ -74,7 +74,7 @@ export default function Footer() {
 
         <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="font-body text-white/20 text-xs">
-            &copy; 2026 CW Soundlabs. All rights reserved. Chicago, IL.
+            &copy; 2026 CW Soundlab. All rights reserved. Chicago, IL.
           </p>
           <Link
             href="/booking"
