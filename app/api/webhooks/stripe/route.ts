@@ -12,28 +12,48 @@ const FROM_EMAIL = 'bookings@cwsoundlab.com'
 export async function POST(req: NextRequest) {
   const body = await req.text()
   const sig = req.headers.get('stripe-signature')!
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
+
+  const snapshotSecret = process.env.STRIPE_WEBHOOK_SECRET_SNAPSHOT!
+  const thinSecret = process.env.STRIPE_WEBHOOK_SECRET_THIN!
 
   let event: Stripe.Event
+  let isThinPayload = false
+
+  // Try snapshot secret first, then thin
   try {
-    event = stripe.webhooks.constructEvent(body, sig, webhookSecret)
-  } catch (err) {
-    console.error('Webhook signature error:', err)
-    return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
+    event = stripe.webhooks.constructEvent(body, sig, snapshotSecret)
+  } catch {
+    try {
+      event = stripe.webhooks.constructEvent(body, sig, thinSecret)
+      isThinPayload = true
+    } catch (err) {
+      console.error('Webhook signature verification failed:', err)
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
+    }
   }
 
   if (event.type !== 'checkout.session.completed') {
     return NextResponse.json({ received: true })
   }
 
-  const session = event.data.object as Stripe.Checkout.Session
+  // Thin payload only has the session ID — fetch the full session from Stripe
+  let session: Stripe.Checkout.Session
+  if (isThinPayload) {
+    const partial = event.data.object as { id: string }
+    session = await stripe.checkout.sessions.retrieve(partial.id, {
+      expand: ['line_items'],
+    })
+  } else {
+    session = event.data.object as Stripe.Checkout.Session
+  }
+
   const meta = session.metadata ?? {}
 
   const booking = {
     stripe_session_id: session.id,
     service_id: meta.serviceId ?? '',
     service_name: meta.serviceName ?? '',
-    price: session.amount_total ? session.amount_total / 100 : 0,
+    price: session.amount_total ? Math.round(session.amount_total / 100) : 0,
     date: meta.date ?? '',
     time: meta.time ?? '',
     customer_name: meta.name ?? '',
@@ -43,18 +63,24 @@ export async function POST(req: NextRequest) {
     status: 'confirmed',
   }
 
-  const { error: dbError } = await supabase.from('bookings').insert(booking)
+  // Upsert so duplicate webhook deliveries don't create duplicate rows
+  const { error: dbError } = await supabase
+    .from('bookings')
+    .upsert(booking, { onConflict: 'stripe_session_id' })
+
   if (dbError) {
-    console.error('DB insert error:', dbError)
+    console.error('DB upsert error:', dbError)
     return NextResponse.json({ error: 'DB error' }, { status: 500 })
   }
 
-  const formattedDate = new Date(booking.date + 'T12:00:00').toLocaleDateString('en-US', {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  })
+  const formattedDate = booking.date
+    ? new Date(booking.date + 'T12:00:00').toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      })
+    : 'TBD'
 
   await Promise.all([
     resend.emails.send({
