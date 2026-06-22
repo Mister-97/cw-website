@@ -27,6 +27,7 @@ export default function BookingForm() {
   const [bookedSlots, setBookedSlots] = useState<string[]>([])
   const [slotsLoading, setSlotsLoading] = useState(false)
   const [form, setForm] = useState({ name: '', email: '', phone: '', notes: '' })
+  const [interestedInMembership, setInterestedInMembership] = useState(false)
   const [agreed, setAgreed] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -75,6 +76,7 @@ export default function BookingForm() {
           email: form.email,
           phone: form.phone,
           notes: form.notes,
+          addMembership: interestedInMembership,
         }),
       })
       const data = await res.json()
@@ -357,6 +359,43 @@ export default function BookingForm() {
                   rows={3}
                   className="bg-white border-2 border-black focus:border-cw-red text-black font-body text-sm px-4 py-3.5 w-full outline-none transition-colors placeholder:text-gray-300 resize-none"
                 />
+              </div>
+            </div>
+
+            {/* Membership upsell */}
+            <div className={`mb-6 border-2 transition-colors ${interestedInMembership ? 'border-cw-red bg-red-50' : 'border-black/10 bg-gray-50'}`}>
+              <div className="p-5">
+                <div className="flex items-start justify-between gap-4 mb-3">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="bg-cw-red text-white font-heading text-xs px-2 py-0.5 tracking-wider">MEMBER PERK</span>
+                    </div>
+                    <p className="font-heading text-base text-black">Save 10% on this session + every future session</p>
+                  </div>
+                  <p className="font-heading text-2xl text-black flex-shrink-0">$9.99<span className="text-gray-400 font-body text-xs">/mo</span></p>
+                </div>
+                <ul className="space-y-1 mb-4">
+                  {['10% off from your 2nd session onwards', '1 free WAV lease beat every month', '10% off partner cleaning, design & artwork'].map(p => (
+                    <li key={p} className="flex items-center gap-2 font-body text-xs text-gray-500">
+                      <span className="w-1 h-1 bg-cw-red rounded-full flex-shrink-0" />{p}
+                    </li>
+                  ))}
+                </ul>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <div
+                    onClick={() => setInterestedInMembership(v => !v)}
+                    className={`w-4 h-4 border-2 flex-shrink-0 flex items-center justify-center transition-colors cursor-pointer ${interestedInMembership ? 'bg-cw-red border-cw-red' : 'border-black/30'}`}
+                  >
+                    {interestedInMembership && (
+                      <svg className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </div>
+                  <span onClick={() => setInterestedInMembership(v => !v)} className="font-body text-sm text-black cursor-pointer">
+                    Yes, add Soundlab Member to my checkout — save 10% starting next session
+                  </span>
+                </label>
               </div>
             </div>
 

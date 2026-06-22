@@ -10,6 +10,7 @@ const links = [
   { href: '/services', label: 'Services' },
   { href: '/gallery', label: 'Gallery' },
   { href: '/about', label: 'About' },
+  { href: '/membership', label: 'Join The Lab' },
 ]
 
 export default function Navbar() {
@@ -61,7 +62,11 @@ export default function Navbar() {
               key={link.href}
               href={link.href}
               className={`font-heading text-sm tracking-widest uppercase transition-colors ${
-                pathname === link.href
+                link.href === '/membership'
+                  ? pathname === '/membership'
+                    ? 'text-cw-red'
+                    : `${isHero ? 'text-cw-red' : 'text-cw-red'} hover:opacity-70`
+                  : pathname === link.href
                   ? 'text-cw-red'
                   : `${textColor} ${linkHover}`
               }`}
@@ -92,7 +97,7 @@ export default function Navbar() {
       {/* Mobile dropdown */}
       <div
         className={`md:hidden overflow-hidden transition-all duration-300 ${
-          mobileOpen ? 'max-h-72' : 'max-h-0'
+          mobileOpen ? 'max-h-80' : 'max-h-0'
         } bg-white border-b border-black/10`}
       >
         {[...links, { href: '/booking', label: 'Book Now' }].map((link) => (

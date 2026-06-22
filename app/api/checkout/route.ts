@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json()
-    const { serviceId, serviceName, price, date, time, name, email, phone, notes } = body as {
+    const { serviceId, serviceName, price, date, time, name, email, phone, notes, addMembership } = body as {
       serviceId: string
       serviceName: string
       price: number
@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
       email: string
       phone: string
       notes?: string
+      addMembership?: boolean
     }
 
     if (!serviceName || !price || !date || !time || !name || !email || !phone) {
@@ -42,6 +43,8 @@ export async function POST(req: NextRequest) {
     const discountedPrice = isMemberDiscount ? Math.round(price * 0.9) : price
     const deposit = Math.round(discountedPrice / 2)
 
+    // Stripe can't mix one-time and recurring in one session.
+    // If member upsell was checked, pass it as metadata and redirect to membership after booking.
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -71,7 +74,7 @@ export async function POST(req: NextRequest) {
         fullPrice: String(discountedPrice),
         deposit: String(deposit),
       },
-      success_url: `${origin}/booking/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${origin}/booking/success?session_id={CHECKOUT_SESSION_ID}${addMembership ? '&join=1&name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email) : ''}`,
       cancel_url: `${origin}/booking`,
     })
 

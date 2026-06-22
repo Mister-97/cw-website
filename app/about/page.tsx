@@ -3,9 +3,23 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'About | CW Soundlab Chicago',
+  title: 'About CW Soundlab | Chicago Recording Studio',
   description:
-    'Meet Wizz Wizzet and Chubbsdaproducer, the Chicago producers behind CW Soundlab.',
+    'CW Soundlab is a professional recording studio in Chicago, IL founded by Wizz. We have worked with Calboy, Tory Lanez, Lil Keed and more. Book your session from $65.',
+  keywords: [
+    'Wizz chicago producer',
+    'CW Soundlab about',
+    'chicago music producer',
+    'Calboy studio chicago',
+    'Tory Lanez chicago',
+    'professional audio engineer chicago',
+  ],
+  alternates: { canonical: 'https://cwsoundlab.com/about' },
+  openGraph: {
+    title: 'About CW Soundlab | Chicago Recording Studio',
+    description: 'Founded by Wizz in Chicago IL. Credits include Calboy, Tory Lanez, Lil Keed and more.',
+    url: 'https://cwsoundlab.com/about',
+  },
 }
 
 const credits = [

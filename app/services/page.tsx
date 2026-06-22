@@ -3,9 +3,24 @@ import Link from 'next/link'
 import { services, categories, Service } from '@/lib/services'
 
 export const metadata: Metadata = {
-  title: 'Services & Pricing | CW Soundlab Chicago',
+  title: 'Recording Studio Services & Pricing in Chicago | CW Soundlab',
   description:
-    'Recording sessions, custom beat production, mixing & mastering. View all packages and pricing at CW Soundlab Chicago.',
+    'All 14 services at CW Soundlab Chicago. Recording sessions from $65, custom beat production, mixing and mastering, music videos. Affordable professional studio time in Chicago, IL.',
+  keywords: [
+    'recording studio prices chicago',
+    'cheap studio time chicago',
+    'beat production chicago il',
+    'mixing mastering chicago',
+    'music video studio chicago',
+    'BandLab mix chicago',
+    'audio engineer chicago',
+  ],
+  alternates: { canonical: 'https://cwsoundlab.com/services' },
+  openGraph: {
+    title: 'Recording Studio Services & Pricing in Chicago | CW Soundlab',
+    description: '14 services from $65. Recording, beats, mixing, mastering and content in Chicago IL.',
+    url: 'https://cwsoundlab.com/services',
+  },
 }
 
 const categoryOrder: Service['category'][] = ['recording', 'production', 'post', 'content']

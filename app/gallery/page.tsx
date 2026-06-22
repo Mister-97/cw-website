@@ -3,8 +3,15 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Studio Gallery | CW Soundlab Chicago',
-  description: 'Take a look inside CW Soundlab Chicago recording studio photos.',
+  title: 'Studio Gallery | CW Soundlab Chicago Recording Studio',
+  description:
+    'Photos inside CW Soundlab, a professional recording studio in Chicago, IL. See the booth, control room, lounge and equipment.',
+  alternates: { canonical: 'https://cwsoundlab.com/gallery' },
+  openGraph: {
+    title: 'Studio Gallery | CW Soundlab Chicago',
+    description: 'Inside CW Soundlab, a professional recording studio in Chicago, IL.',
+    url: 'https://cwsoundlab.com/gallery',
+  },
 }
 
 const photos = [
