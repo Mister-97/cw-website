@@ -11,7 +11,8 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json()
-    const { serviceName, price, date, time, name, email, phone, notes } = body as {
+    const { serviceId, serviceName, price, date, time, name, email, phone, notes } = body as {
+      serviceId: string
       serviceName: string
       price: number
       date: string
@@ -46,12 +47,14 @@ export async function POST(req: NextRequest) {
       mode: 'payment',
       customer_email: email,
       metadata: {
+        serviceId: serviceId ?? '',
+        serviceName,
         name,
+        email,
         phone,
         date,
         time,
         notes: notes ?? '',
-        serviceName,
       },
       success_url: `${origin}/booking/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/booking`,

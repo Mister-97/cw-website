@@ -24,6 +24,8 @@ export default function BookingForm() {
   )
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedTime, setSelectedTime] = useState('')
+  const [bookedSlots, setBookedSlots] = useState<string[]>([])
+  const [slotsLoading, setSlotsLoading] = useState(false)
   const [form, setForm] = useState({ name: '', email: '', phone: '', notes: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -33,6 +35,17 @@ export default function BookingForm() {
       setStep(2)
     }
   }, [preselectedId])
+
+  useEffect(() => {
+    if (!selectedDate) return
+    setSlotsLoading(true)
+    setSelectedTime('')
+    fetch(`/api/bookings/slots?date=${selectedDate}`)
+      .then((r) => r.json())
+      .then((data) => setBookedSlots(data.slots ?? []))
+      .catch(() => setBookedSlots([]))
+      .finally(() => setSlotsLoading(false))
+  }, [selectedDate])
 
   const today = new Date().toISOString().split('T')[0]
   const canGoTo2 = selectedService !== null
@@ -88,7 +101,6 @@ export default function BookingForm() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Dark header bar */}
       <div className="bg-black pt-20 pb-12 px-4">
         <div className="max-w-2xl mx-auto text-center">
           <p className="text-cw-red font-heading tracking-[0.4em] uppercase text-xs mb-3">
@@ -100,7 +112,6 @@ export default function BookingForm() {
       <div className="h-1.5 bg-cw-red" />
 
       <div className="max-w-2xl mx-auto px-4 py-12">
-        {/* Step indicators */}
         <div className="flex items-center justify-center gap-0 mb-10">
           {([1, 2, 3] as Step[]).map((n) => (
             <div key={n} className="flex items-center">
@@ -134,7 +145,7 @@ export default function BookingForm() {
           {step === 3 && 'Your info & payment'}
         </p>
 
-        {/* ── Step 1: Service Selection ─────────────────────────── */}
+        {/* Step 1: Service */}
         {step === 1 && (
           <div>
             <div className="space-y-2">
@@ -177,7 +188,6 @@ export default function BookingForm() {
                 )
               })}
             </div>
-
             <div className="mt-8 flex justify-end">
               <button
                 onClick={() => canGoTo2 && setStep(2)}
@@ -194,7 +204,7 @@ export default function BookingForm() {
           </div>
         )}
 
-        {/* ── Step 2: Date & Time ───────────────────────────────── */}
+        {/* Step 2: Date & Time */}
         {step === 2 && (
           <div>
             <div className="bg-gray-50 border-2 border-black p-5 mb-8 flex items-center justify-between">
@@ -228,21 +238,34 @@ export default function BookingForm() {
             <div className="mb-8">
               <label className="block font-heading text-xs text-black tracking-widest uppercase mb-3">
                 Select Time
+                {slotsLoading && (
+                  <span className="ml-2 text-gray-400 normal-case font-body tracking-normal">
+                    Checking availability...
+                  </span>
+                )}
               </label>
               <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
-                {TIME_SLOTS.map((slot) => (
-                  <button
-                    key={slot}
-                    onClick={() => setSelectedTime(slot)}
-                    className={`font-body text-xs py-3 border-2 transition-colors ${
-                      selectedTime === slot
-                        ? 'bg-cw-red border-cw-red text-white'
-                        : 'border-black/20 text-black hover:border-cw-red hover:text-cw-red'
-                    }`}
-                  >
-                    {slot}
-                  </button>
-                ))}
+                {TIME_SLOTS.map((slot) => {
+                  const booked = bookedSlots.includes(slot)
+                  const selected = selectedTime === slot
+                  return (
+                    <button
+                      key={slot}
+                      onClick={() => !booked && setSelectedTime(slot)}
+                      disabled={booked || slotsLoading}
+                      title={booked ? 'Already booked' : undefined}
+                      className={`font-body text-xs py-3 border-2 transition-colors ${
+                        booked
+                          ? 'border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed line-through'
+                          : selected
+                          ? 'bg-cw-red border-cw-red text-white'
+                          : 'border-black/20 text-black hover:border-cw-red hover:text-cw-red'
+                      }`}
+                    >
+                      {slot}
+                    </button>
+                  )
+                })}
               </div>
               {selectedService?.id === 'early-bird' && (
                 <p className="mt-3 text-xs text-amber-600 font-body">
@@ -273,7 +296,7 @@ export default function BookingForm() {
           </div>
         )}
 
-        {/* ── Step 3: Info + Payment ────────────────────────────── */}
+        {/* Step 3: Info + Payment */}
         {step === 3 && (
           <div>
             <div className="bg-black p-6 mb-8">
