@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { services } from '@/lib/services'
+import MembershipPopup from '@/components/MembershipPopup'
 
 const stats = [
   { value: '500+', label: 'Artists Recorded' },
@@ -35,6 +36,7 @@ const featuredServices = featuredIds
 export default function HomePage() {
   return (
     <>
+      <MembershipPopup />
       {/* ─── Hero ─────────────────────────────────────────────────── */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Studio background photo */}
@@ -382,29 +384,53 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── Soundlab Member Banner ───────────────────────────────── */}
-      <section className="bg-black border-y border-white/10 py-0">
-        <Link
-          href="/membership"
-          className="group flex flex-col sm:flex-row items-center justify-between gap-4 max-w-6xl mx-auto px-4 py-6 transition-colors hover:bg-white/[0.03]"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-cw-red flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-heading text-xs">SM</span>
-            </div>
+      {/* ─── Soundlab Member Section ──────────────────────────────── */}
+      <section className="bg-black border-y border-white/10 py-16 px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-10 items-center">
+            {/* Left */}
             <div>
-              <p className="font-heading text-white text-base leading-tight">
-                Soundlab Member — <span className="text-cw-red">$9.99/mo</span>
+              <div className="inline-flex items-center gap-2 border border-cw-red/40 px-3 py-1 mb-6">
+                <div className="w-1.5 h-1.5 bg-cw-red rounded-full animate-pulse" />
+                <span className="font-heading text-xs text-cw-red tracking-widest uppercase">Now Available</span>
+              </div>
+              <h2 className="font-heading text-5xl md:text-6xl text-white leading-none mb-4">
+                Soundlab<br />Member
+              </h2>
+              <p className="font-body text-white/40 text-sm leading-relaxed mb-6">
+                One membership. Every perk. Built for artists serious about their craft.
               </p>
-              <p className="font-body text-white/40 text-xs mt-0.5">
-                10% off sessions · Monthly beat · Partner discounts
-              </p>
+              <div className="flex items-baseline gap-2 mb-8">
+                <span className="font-heading text-5xl text-white">$9.99</span>
+                <span className="font-body text-white/30 text-sm">/month · Cancel anytime</span>
+              </div>
+              <Link
+                href="/membership"
+                className="inline-block bg-cw-red hover:bg-white hover:text-black text-white font-heading text-xs px-10 py-4 tracking-widest uppercase transition-colors"
+              >
+                Join the Lab
+              </Link>
+            </div>
+
+            {/* Right — perks */}
+            <div className="space-y-0 border border-white/10">
+              {[
+                { title: '10% Off Sessions', sub: 'From your 2nd booking onwards' },
+                { title: '1 WAV Lease Beat / Month', sub: 'Fresh beat delivered to your inbox' },
+                { title: '10% Off Cleaning Services', sub: 'Partner discount' },
+                { title: '10% Off Design & Artwork', sub: 'Logos, graphics, album covers' },
+              ].map((perk, i) => (
+                <div key={perk.title} className={`flex items-center gap-4 px-6 py-5 ${i < 3 ? 'border-b border-white/10' : ''}`}>
+                  <div className="w-1.5 h-1.5 bg-cw-red rounded-full flex-shrink-0" />
+                  <div>
+                    <p className="font-heading text-sm text-white">{perk.title}</p>
+                    <p className="font-body text-white/30 text-xs mt-0.5">{perk.sub}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-          <span className="font-heading text-xs text-white/30 group-hover:text-cw-red tracking-widest uppercase transition-colors flex-shrink-0">
-            Join Now →
-          </span>
-        </Link>
+        </div>
       </section>
 
       {/* ─── Pricing teaser ───────────────────────────────────────── */}
