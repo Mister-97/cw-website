@@ -103,7 +103,7 @@ export default function BookingForm() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="bg-black pt-20 pb-12 px-4">
+      <div className="bg-black pt-40 md:pt-32 pb-12 px-4">
         <div className="max-w-2xl mx-auto text-center">
           <p className="text-cw-red font-heading tracking-[0.4em] uppercase text-xs mb-3">
             CW Soundlab · Chicago, IL
@@ -456,7 +456,13 @@ export default function BookingForm() {
                     : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 }`}
               >
-                {loading ? 'Processing...' : `Pay $${Math.round((selectedService?.price ?? 0) / 2)} Deposit`}
+                {loading ? 'Processing...' : (() => {
+                  const deposit = Math.round((selectedService?.price ?? 0) / 2)
+                  const total = interestedInMembership ? deposit + 9.99 : deposit
+                  return interestedInMembership
+                    ? `Pay $${deposit} Deposit + $9.99 Membership = $${total.toFixed(2)}`
+                    : `Pay $${deposit} Deposit`
+                })()}
               </button>
             </div>
 

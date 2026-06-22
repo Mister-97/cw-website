@@ -94,8 +94,13 @@ export async function POST(req: NextRequest) {
 
   const meta = session.metadata ?? {}
 
-  const depositPaid = session.amount_total ? Math.round(session.amount_total / 100) : 0
+  // Use the stored deposit from metadata so the $9.99 membership fee
+  // does not inflate the depositPaid figure if addMembership was checked.
+  const depositPaid = meta.deposit ? parseInt(meta.deposit) : (session.amount_total ? Math.round(session.amount_total / 100) : 0)
   const fullPrice = meta.fullPrice ? parseInt(meta.fullPrice) : depositPaid * 2
+
+  const customerEmail = session.customer_email ?? meta.email ?? ''
+  const customerName = meta.name ?? ''
 
   const booking = {
     stripe_session_id: session.id,
@@ -104,15 +109,15 @@ export async function POST(req: NextRequest) {
     price: fullPrice,
     date: meta.date ?? '',
     time: meta.time ?? '',
-    customer_name: meta.name ?? '',
-    customer_email: session.customer_email ?? meta.email ?? '',
+    customer_name: customerName,
+    customer_email: customerEmail,
     customer_phone: meta.phone ?? '',
     notes: meta.notes ?? '',
     status: 'confirmed',
   }
 
   // Increment session count if member
-  await supabase.rpc('increment_member_sessions', { member_email: booking.customer_email }).maybeSingle()
+  await supabase.rpc('increment_member_sessions', { member_email: customerEmail }).maybeSingle()
 
   // Upsert so duplicate webhook deliveries don't create duplicate rows
   const { error: dbError } = await supabase
@@ -122,6 +127,56 @@ export async function POST(req: NextRequest) {
   if (dbError) {
     console.error('DB upsert error:', dbError)
     return NextResponse.json({ error: 'DB error' }, { status: 500 })
+  }
+
+  // Auto-create subscription with 30-day trial when membership was bundled in checkout.
+  // The artist already paid $9.99 for month 1 so the trial covers month 1.
+  if (meta.addMembership === 'true' && customerEmail) {
+    try {
+      const MEMBERSHIP_PRICE_ID = process.env.STRIPE_MEMBERSHIP_PRICE_ID ?? 'price_1Tl1FmJlW9Y88JKyFoHNB5x5'
+      const trialEnd = Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60
+
+      // Find or create Stripe customer
+      const customers = await stripe.customers.list({ email: customerEmail, limit: 1 })
+      let customerId: string
+      if (customers.data.length > 0) {
+        customerId = customers.data[0].id
+      } else {
+        const customer = await stripe.customers.create({ email: customerEmail, name: customerName })
+        customerId = customer.id
+      }
+
+      const sub = await stripe.subscriptions.create({
+        customer: customerId,
+        items: [{ price: MEMBERSHIP_PRICE_ID }],
+        trial_end: trialEnd,
+        metadata: { email: customerEmail, name: customerName },
+      })
+
+      // Create member row and send welcome email
+      const { data: newMember } = await supabase
+        .from('members')
+        .upsert({
+          email: customerEmail,
+          name: customerName,
+          stripe_customer_id: customerId,
+          stripe_subscription_id: sub.id,
+          status: 'active',
+        }, { onConflict: 'email' })
+        .select('token')
+        .single()
+
+      if (newMember?.token) {
+        await resend.emails.send({
+          from: FROM_EMAIL,
+          to: customerEmail,
+          subject: 'Welcome to Soundlab Member',
+          html: memberWelcomeEmailHtml({ name: customerName, token: newMember.token }),
+        })
+      }
+    } catch (subErr) {
+      console.error('Auto-subscription creation error:', subErr)
+    }
   }
 
   const formattedDate = booking.date
@@ -136,7 +191,7 @@ export async function POST(req: NextRequest) {
   await Promise.all([
     resend.emails.send({
       from: FROM_EMAIL,
-      to: booking.customer_email,
+      to: customerEmail,
       subject: `You're Booked at CW Soundlab: ${formattedDate}`,
       html: customerEmailHtml({
         name: booking.customer_name,
@@ -154,7 +209,7 @@ export async function POST(req: NextRequest) {
       subject: `New Booking: ${booking.service_name} on ${formattedDate}`,
       html: ownerEmailHtml({
         name: booking.customer_name,
-        email: booking.customer_email,
+        email: customerEmail,
         phone: booking.customer_phone,
         service: booking.service_name,
         date: formattedDate,

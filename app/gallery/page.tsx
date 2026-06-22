@@ -45,7 +45,7 @@ export default function GalleryPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-black pt-20 pb-16 px-4">
+      <div className="bg-black pt-40 md:pt-32 pb-16 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <p className="text-cw-red font-heading tracking-[0.4em] uppercase text-xs mb-4">
             The Studio

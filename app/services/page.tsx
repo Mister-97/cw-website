@@ -37,7 +37,7 @@ export default function ServicesPage() {
     <div className="min-h-screen bg-white">
 
       {/* ── Header ─────────────────────────────────────────────── */}
-      <div className="bg-black pt-28 pb-14 px-4">
+      <div className="bg-black pt-40 md:pt-32 pb-14 px-4">
         <div className="max-w-5xl mx-auto">
           <p className="text-cw-red font-heading tracking-[0.4em] uppercase text-xs mb-5">
             CW Soundlab · Chicago, IL

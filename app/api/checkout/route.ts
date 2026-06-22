@@ -43,23 +43,40 @@ export async function POST(req: NextRequest) {
     const discountedPrice = isMemberDiscount ? Math.round(price * 0.9) : price
     const deposit = Math.round(discountedPrice / 2)
 
-    // Stripe can't mix one-time and recurring in one session.
-    // If member upsell was checked, pass it as metadata and redirect to membership after booking.
+    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [
+      {
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: `CW Soundlab ${serviceName}: 50% Deposit${isMemberDiscount ? ' (Member 10% off)' : ''}`,
+            description: `Session on ${date} at ${time}. Remaining $${deposit} due in cash at the studio.`,
+          },
+          unit_amount: deposit * 100,
+        },
+        quantity: 1,
+      },
+    ]
+
+    // When the artist checks "add membership", include $9.99 as a line item.
+    // The webhook will auto-create the Stripe subscription with a 30-day trial
+    // so they are not charged again until next month.
+    if (addMembership && !member) {
+      lineItems.push({
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: 'Soundlab Member: First Month',
+            description: '10% off sessions, 1 WAV lease beat/month, partner discounts. Renews at $9.99/month. Cancel anytime.',
+          },
+          unit_amount: 999,
+        },
+        quantity: 1,
+      })
+    }
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: `CW Soundlab ${serviceName}: 50% Deposit${isMemberDiscount ? ' (Member 10% off)' : ''}`,
-              description: `Session on ${date} at ${time} · Remaining $${deposit} due in cash at the studio`,
-            },
-            unit_amount: deposit * 100,
-          },
-          quantity: 1,
-        },
-      ],
+      line_items: lineItems,
       mode: 'payment',
       customer_email: email,
       metadata: {
@@ -73,8 +90,9 @@ export async function POST(req: NextRequest) {
         notes: notes ?? '',
         fullPrice: String(discountedPrice),
         deposit: String(deposit),
+        addMembership: addMembership && !member ? 'true' : 'false',
       },
-      success_url: `${origin}/booking/success?session_id={CHECKOUT_SESSION_ID}${addMembership ? '&join=1&name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email) : ''}`,
+      success_url: `${origin}/booking/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/booking`,
     })
 

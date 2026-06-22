@@ -67,7 +67,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-black pt-32 pb-14 px-4">
+      <div className="bg-black pt-40 md:pt-32 pb-14 px-4">
         <div className="max-w-3xl mx-auto">
           <span className="inline-block font-heading text-[10px] tracking-widest uppercase text-cw-red mb-4">
             {article.category}

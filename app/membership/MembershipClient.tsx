@@ -71,7 +71,7 @@ export default function MembershipClient() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-black pt-24 pb-16 px-4">
+      <div className="bg-black pt-40 md:pt-32 pb-16 px-4">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
             <p className="text-cw-red font-heading tracking-[0.5em] uppercase text-xs mb-3">
