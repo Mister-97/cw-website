@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://cwsoundlab.com' },
   openGraph: {
     title: 'CW Soundlab | Recording Studio in Chicago, IL',
-    description: 'Chicago\'s premier recording studio. Sessions from $65. Book online in 2 minutes — open 8AM to 2AM.',
+    description: 'Chicago\'s premier recording studio. Sessions from $65. Book online in 2 minutes, open 8AM to 2AM.',
     type: 'website',
     url: 'https://cwsoundlab.com',
     siteName: 'CW Soundlab',

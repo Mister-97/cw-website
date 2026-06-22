@@ -97,7 +97,7 @@ export default function MembershipClient() {
 
           {/* Perks */}
           <div>
-            <p className="font-heading text-xs tracking-widest uppercase text-gray-400 mb-8">What You Get</p>
+            <p className="font-heading text-xs tracking-widest uppercase text-gray-600 mb-8">What You Get</p>
             <div className="space-y-0">
               {perks.map((perk, i) => (
                 <div key={perk.label} className={`flex gap-5 py-7 ${i < perks.length - 1 ? 'border-b border-black/10' : ''}`}>
@@ -106,7 +106,7 @@ export default function MembershipClient() {
                   </div>
                   <div>
                     <p className="font-heading text-lg text-black leading-tight mb-1">{perk.label}</p>
-                    <p className="font-body text-gray-400 text-sm leading-relaxed">{perk.detail}</p>
+                    <p className="font-body text-gray-600 text-sm leading-relaxed">{perk.detail}</p>
                   </div>
                 </div>
               ))}
@@ -115,7 +115,7 @@ export default function MembershipClient() {
 
           {/* Sign up form */}
           <div>
-            <p className="font-heading text-xs tracking-widest uppercase text-gray-400 mb-8">Join Now</p>
+            <p className="font-heading text-xs tracking-widest uppercase text-gray-600 mb-8">Join Now</p>
             <div className="border-2 border-black p-8">
               <div className="space-y-4 mb-6">
                 <div>
@@ -127,7 +127,7 @@ export default function MembershipClient() {
                     placeholder="Your name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="bg-white border-2 border-black/20 focus:border-black text-black font-body text-sm px-4 py-3.5 w-full outline-none transition-colors placeholder:text-gray-300"
+                    className="bg-white border-2 border-black/20 focus:border-black text-black font-body text-sm px-4 py-3.5 w-full outline-none transition-colors placeholder:text-gray-500"
                   />
                 </div>
                 <div>
@@ -139,7 +139,7 @@ export default function MembershipClient() {
                     placeholder="your@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="bg-white border-2 border-black/20 focus:border-black text-black font-body text-sm px-4 py-3.5 w-full outline-none transition-colors placeholder:text-gray-300"
+                    className="bg-white border-2 border-black/20 focus:border-black text-black font-body text-sm px-4 py-3.5 w-full outline-none transition-colors placeholder:text-gray-500"
                   />
                 </div>
               </div>
@@ -150,13 +150,13 @@ export default function MembershipClient() {
                 onClick={handleSubscribe}
                 disabled={loading}
                 className={`w-full font-heading text-sm py-4 tracking-widest uppercase transition-colors ${
-                  loading ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-cw-red hover:bg-black text-white'
+                  loading ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-cw-red hover:bg-black text-white'
                 }`}
               >
                 {loading ? 'Redirecting...' : 'Join for $9.99/month'}
               </button>
 
-              <p className="text-center font-body text-xs text-gray-300 mt-4">
+              <p className="text-center font-body text-xs text-gray-500 mt-4">
                 Secured by Stripe. To cancel, email{' '}
                 <a href="mailto:cwsoundlab@gmail.com" className="text-black hover:text-cw-red transition-colors underline">
                   cwsoundlab@gmail.com
@@ -166,8 +166,8 @@ export default function MembershipClient() {
 
             {/* Already a member */}
             <div className="mt-6 border-2 border-black/10 p-5 text-center">
-              <p className="font-body text-sm text-gray-400 mb-2">Already a member?</p>
-              <p className="font-body text-xs text-gray-300">Check your welcome email for your personal member link.</p>
+              <p className="font-body text-sm text-gray-600 mb-2">Already a member?</p>
+              <p className="font-body text-xs text-gray-500">Check your welcome email for your personal member link.</p>
             </div>
           </div>
         </div>

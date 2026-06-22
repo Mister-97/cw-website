@@ -137,7 +137,7 @@ export async function POST(req: NextRequest) {
     resend.emails.send({
       from: FROM_EMAIL,
       to: booking.customer_email,
-      subject: `You're Booked at CW Soundlab — ${formattedDate}`,
+      subject: `You're Booked at CW Soundlab: ${formattedDate}`,
       html: customerEmailHtml({
         name: booking.customer_name,
         service: booking.service_name,
@@ -151,7 +151,7 @@ export async function POST(req: NextRequest) {
     resend.emails.send({
       from: FROM_EMAIL,
       to: OWNER_EMAIL,
-      subject: `New Booking — ${booking.service_name} on ${formattedDate}`,
+      subject: `New Booking: ${booking.service_name} on ${formattedDate}`,
       html: ownerEmailHtml({
         name: booking.customer_name,
         email: booking.customer_email,
@@ -217,7 +217,7 @@ function customerEmailHtml(d: {
     </div>
 
     <p style="color:#374151;font-size:15px;line-height:1.6;">See you in the lab.</p>
-    <p style="color:#374151;font-size:15px;font-weight:bold;">— CW Soundlab</p>
+    <p style="color:#374151;font-size:15px;font-weight:bold;">CW Soundlab</p>
 
     <div style="border-top:1px solid #e5e7eb;margin-top:32px;padding-top:16px;">
       <p style="color:#9ca3af;font-size:11px;text-align:center;">CW Soundlab · Chicago, IL · cwsoundlab.com</p>
@@ -305,7 +305,7 @@ function memberWelcomeEmailHtml(d: { name: string; token: string }) {
       <a href="${portalUrl}" style="display:inline-block;background:#e11d48;color:#fff;font-size:13px;letter-spacing:3px;text-transform:uppercase;text-decoration:none;padding:16px 32px;">
         Open Member Portal
       </a>
-      <p style="color:rgba(255,255,255,0.2);font-size:11px;margin:16px 0 0;">Bookmark this link — it's your key to all your perks.</p>
+      <p style="color:rgba(255,255,255,0.2);font-size:11px;margin:16px 0 0;">Bookmark this link, it's your key to all your perks.</p>
     </div>
 
     <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:20px;text-align:center;">

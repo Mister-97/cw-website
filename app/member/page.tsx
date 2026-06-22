@@ -101,7 +101,7 @@ function MemberPortal() {
           <p className="font-heading text-xs tracking-widest uppercase text-cw-red mb-1">Session Perk</p>
           <h2 className="font-heading text-xl text-white mb-1">10% Off Sessions</h2>
           {sessionDiscount ? (
-            <p className="font-body text-white/40 text-sm">Active — your discount applies automatically at checkout when you use this email.</p>
+            <p className="font-body text-white/40 text-sm">Active. Your discount applies automatically at checkout when you use this email.</p>
           ) : (
             <p className="font-body text-white/40 text-sm">Unlocks after your first session. Book your first session and the discount kicks in on every booking after.</p>
           )}

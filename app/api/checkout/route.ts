@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: `CW Soundlab ${serviceName} — 50% Deposit${isMemberDiscount ? ' (Member 10% off)' : ''}`,
+              name: `CW Soundlab ${serviceName}: 50% Deposit${isMemberDiscount ? ' (Member 10% off)' : ''}`,
               description: `Session on ${date} at ${time} · Remaining $${deposit} due in cash at the studio`,
             },
             unit_amount: deposit * 100,

@@ -385,7 +385,7 @@ export default function HomePage() {
       </section>
 
       {/* ─── Soundlab Member Section ──────────────────────────────── */}
-      <section className="bg-black border-y border-white/10 py-16 px-4">
+      <section className="bg-zinc-900 border-t-4 border-cw-red py-16 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="grid md:grid-cols-2 gap-10 items-center">
             {/* Left */}

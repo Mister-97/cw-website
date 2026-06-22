@@ -28,17 +28,16 @@ export default function Navbar() {
     setMobileOpen(false)
   }, [pathname])
 
-  // On hero (home page, not scrolled) transparent with white text
-  // After scroll or on inner pages white bg with black text
-  const isHero = pathname === '/' && !scrolled
-  const textColor = isHero ? 'text-white' : 'text-black'
-  const linkHover = isHero ? 'hover:text-cw-red' : 'hover:text-cw-red'
+  const isHomepage = pathname === '/'
+  const isDark = isHomepage && !scrolled
+  const textColor = isDark ? 'text-white' : 'text-black'
+  const linkHover = 'hover:text-cw-red'
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isHero
-          ? 'bg-transparent'
+        isDark
+          ? 'bg-black'
           : 'bg-white border-b border-black/10 shadow-sm'
       }`}
     >
@@ -65,7 +64,7 @@ export default function Navbar() {
                 link.href === '/membership'
                   ? pathname === '/membership'
                     ? 'text-cw-red'
-                    : `${isHero ? 'text-cw-red' : 'text-cw-red'} hover:opacity-70`
+                    : 'text-cw-red hover:opacity-70'
                   : pathname === link.href
                   ? 'text-cw-red'
                   : `${textColor} ${linkHover}`
@@ -88,9 +87,9 @@ export default function Navbar() {
           className="md:hidden flex flex-col gap-1.5 p-2"
           aria-label="Toggle menu"
         >
-          <span className={`block w-6 h-0.5 transition-all duration-300 ${isHero ? 'bg-white' : 'bg-black'} ${mobileOpen ? 'rotate-45 translate-y-2' : ''}`} />
-          <span className={`block w-6 h-0.5 transition-all duration-300 ${isHero ? 'bg-white' : 'bg-black'} ${mobileOpen ? 'opacity-0 scale-x-0' : ''}`} />
-          <span className={`block w-6 h-0.5 transition-all duration-300 ${isHero ? 'bg-white' : 'bg-black'} ${mobileOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+          <span className={`block w-6 h-0.5 transition-all duration-300 ${isDark ? 'bg-white' : 'bg-black'} ${mobileOpen ? 'rotate-45 translate-y-2' : ''}`} />
+          <span className={`block w-6 h-0.5 transition-all duration-300 ${isDark ? 'bg-white' : 'bg-black'} ${mobileOpen ? 'opacity-0 scale-x-0' : ''}`} />
+          <span className={`block w-6 h-0.5 transition-all duration-300 ${isDark ? 'bg-white' : 'bg-black'} ${mobileOpen ? '-rotate-45 -translate-y-2' : ''}`} />
         </button>
       </nav>
 

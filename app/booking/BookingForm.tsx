@@ -393,7 +393,7 @@ export default function BookingForm() {
                     )}
                   </div>
                   <span onClick={() => setInterestedInMembership(v => !v)} className="font-body text-sm text-black cursor-pointer">
-                    Yes, add Soundlab Member to my checkout — save 10% starting next session
+                    Yes, add Soundlab Member to my checkout, save 10% starting next session
                   </span>
                 </label>
               </div>

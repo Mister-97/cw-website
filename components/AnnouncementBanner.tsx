@@ -14,7 +14,7 @@ export default function AnnouncementBanner() {
           <div className="w-1.5 h-1.5 bg-white rounded-full flex-shrink-0 animate-pulse" />
           <p className="font-body text-white text-xs truncate">
             <span className="font-heading tracking-wider">NEW</span>
-            {' '}Soundlab Member is here — $9.99/mo gets you 10% off sessions, a monthly beat, and partner discounts.{' '}
+            {' '}Soundlab Member is here: $9.99/mo gets you 10% off sessions, a monthly beat, and partner discounts.{' '}
             <Link href="/membership" className="underline underline-offset-2 hover:no-underline font-semibold">
               Join now
             </Link>
