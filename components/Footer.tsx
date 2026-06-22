@@ -57,6 +57,7 @@ export default function Footer() {
                 { href: '/gallery', label: 'Studio Gallery' },
                 { href: '/booking', label: 'Book a Session' },
                 { href: '/membership', label: 'Soundlab Member' },
+                { href: '/blog', label: 'Blog' },
               ].map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className="font-body text-white/40 hover:text-cw-red text-sm transition-colors">
