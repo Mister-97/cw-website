@@ -104,9 +104,15 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="font-body text-white/20 text-xs">
-            &copy; 2026 CW Soundlab. All rights reserved. Chicago, IL.
-          </p>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <p className="font-body text-white/20 text-xs">
+              &copy; 2026 CW Soundlab. All rights reserved. Chicago, IL.
+            </p>
+            <div className="flex items-center gap-4">
+              <Link href="/terms" className="font-body text-white/20 hover:text-white/50 text-xs transition-colors">Terms</Link>
+              <Link href="/privacy" className="font-body text-white/20 hover:text-white/50 text-xs transition-colors">Privacy</Link>
+            </div>
+          </div>
           <Link
             href="/booking"
             className="bg-cw-red hover:bg-white hover:text-black text-white font-heading text-xs px-6 py-2.5 tracking-widest uppercase transition-colors"

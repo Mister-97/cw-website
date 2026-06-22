@@ -201,6 +201,7 @@ export async function POST(req: NextRequest) {
         depositPaid,
         remainingDue: fullPrice - depositPaid,
         notes: booking.notes,
+        cancelUrl: `https://cwsoundlab.com/booking/cancel?session=${booking.stripe_session_id}`,
       }),
     }),
     resend.emails.send({
@@ -232,6 +233,7 @@ function customerEmailHtml(d: {
   depositPaid: number
   remainingDue: number
   notes: string
+  cancelUrl: string
 }) {
   return `<!DOCTYPE html>
 <html>
@@ -276,6 +278,9 @@ function customerEmailHtml(d: {
 
     <div style="border-top:1px solid #e5e7eb;margin-top:32px;padding-top:16px;">
       <p style="color:#9ca3af;font-size:11px;text-align:center;">CW Soundlab · Chicago, IL · cwsoundlab.com</p>
+      <p style="color:#9ca3af;font-size:11px;text-align:center;margin-top:8px;">
+        Need to cancel? <a href="${d.cancelUrl}" style="color:#9ca3af;">Click here</a> (note: deposits non-refundable within 24hrs)
+      </p>
     </div>
   </div>
 </body>
