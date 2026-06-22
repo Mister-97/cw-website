@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
+import { supabase } from '@/lib/supabase'
 
 export async function POST(req: NextRequest) {
   const secretKey = process.env.STRIPE_SECRET_KEY
@@ -28,7 +29,18 @@ export async function POST(req: NextRequest) {
     }
 
     const origin = req.headers.get('origin') ?? 'http://localhost:3000'
-    const deposit = Math.round(price / 2)
+
+    // Check if active member with at least 1 prior session (discount starts on 2nd booking)
+    const { data: member } = await supabase
+      .from('members')
+      .select('session_count')
+      .eq('email', email)
+      .eq('status', 'active')
+      .single()
+
+    const isMemberDiscount = member && member.session_count >= 1
+    const discountedPrice = isMemberDiscount ? Math.round(price * 0.9) : price
+    const deposit = Math.round(discountedPrice / 2)
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -37,7 +49,7 @@ export async function POST(req: NextRequest) {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: `CW Soundlab ${serviceName} — 50% Deposit`,
+              name: `CW Soundlab ${serviceName} — 50% Deposit${isMemberDiscount ? ' (Member 10% off)' : ''}`,
               description: `Session on ${date} at ${time} · Remaining $${deposit} due in cash at the studio`,
             },
             unit_amount: deposit * 100,
@@ -56,7 +68,7 @@ export async function POST(req: NextRequest) {
         date,
         time,
         notes: notes ?? '',
-        fullPrice: String(price),
+        fullPrice: String(discountedPrice),
         deposit: String(deposit),
       },
       success_url: `${origin}/booking/success?session_id={CHECKOUT_SESSION_ID}`,

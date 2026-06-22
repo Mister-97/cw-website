@@ -382,6 +382,31 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ─── Soundlab Member Banner ───────────────────────────────── */}
+      <section className="bg-black border-y border-white/10 py-0">
+        <Link
+          href="/membership"
+          className="group flex flex-col sm:flex-row items-center justify-between gap-4 max-w-6xl mx-auto px-4 py-6 transition-colors hover:bg-white/[0.03]"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 bg-cw-red flex items-center justify-center flex-shrink-0">
+              <span className="text-white font-heading text-xs">SM</span>
+            </div>
+            <div>
+              <p className="font-heading text-white text-base leading-tight">
+                Soundlab Member — <span className="text-cw-red">$9.99/mo</span>
+              </p>
+              <p className="font-body text-white/40 text-xs mt-0.5">
+                10% off sessions · Monthly beat · Partner discounts
+              </p>
+            </div>
+          </div>
+          <span className="font-heading text-xs text-white/30 group-hover:text-cw-red tracking-widest uppercase transition-colors flex-shrink-0">
+            Join Now →
+          </span>
+        </Link>
+      </section>
+
       {/* ─── Pricing teaser ───────────────────────────────────────── */}
       <section className="bg-white py-20 px-4">
         <div className="max-w-5xl mx-auto">

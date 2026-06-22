@@ -32,6 +32,46 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  // Handle membership subscription events
+  if (event.type === 'customer.subscription.created') {
+    const sub = event.data.object as Stripe.Subscription
+    const meta = sub.metadata ?? {}
+    const email = meta.email ?? ''
+    const name = meta.name ?? ''
+    if (email) {
+      const { data: member } = await supabase
+        .from('members')
+        .upsert({
+          email,
+          name,
+          stripe_customer_id: String(sub.customer),
+          stripe_subscription_id: sub.id,
+          status: 'active',
+        }, { onConflict: 'email' })
+        .select('token')
+        .single()
+
+      if (member?.token) {
+        await resend.emails.send({
+          from: FROM_EMAIL,
+          to: email,
+          subject: 'Welcome to Soundlab Member',
+          html: memberWelcomeEmailHtml({ name, token: member.token }),
+        })
+      }
+    }
+    return NextResponse.json({ received: true })
+  }
+
+  if (event.type === 'customer.subscription.deleted') {
+    const sub = event.data.object as Stripe.Subscription
+    await supabase
+      .from('members')
+      .update({ status: 'cancelled' })
+      .eq('stripe_subscription_id', sub.id)
+    return NextResponse.json({ received: true })
+  }
+
   if (event.type !== 'checkout.session.completed') {
     return NextResponse.json({ received: true })
   }
@@ -45,6 +85,11 @@ export async function POST(req: NextRequest) {
     })
   } else {
     session = event.data.object as Stripe.Checkout.Session
+  }
+
+  // Skip subscription checkouts (handled above)
+  if (session.mode === 'subscription') {
+    return NextResponse.json({ received: true })
   }
 
   const meta = session.metadata ?? {}
@@ -65,6 +110,9 @@ export async function POST(req: NextRequest) {
     notes: meta.notes ?? '',
     status: 'confirmed',
   }
+
+  // Increment session count if member
+  await supabase.rpc('increment_member_sessions', { member_email: booking.customer_email }).maybeSingle()
 
   // Upsert so duplicate webhook deliveries don't create duplicate rows
   const { error: dbError } = await supabase
@@ -224,6 +272,44 @@ function ownerEmailHtml(d: {
         <tr><td style="padding:6px 0;color:#6b7280;font-size:13px;">Phone</td><td style="padding:6px 0;color:#111;font-size:13px;text-align:right;"><a href="tel:${d.phone}" style="color:#e11d48;">${d.phone}</a></td></tr>
         ${d.notes ? `<tr><td style="padding:6px 0;color:#6b7280;font-size:13px;vertical-align:top;">Notes</td><td style="padding:6px 0;color:#111;font-size:13px;text-align:right;">${d.notes}</td></tr>` : ''}
       </table>
+    </div>
+  </div>
+</body>
+</html>`
+}
+
+function memberWelcomeEmailHtml(d: { name: string; token: string }) {
+  const portalUrl = `https://cwsoundlab.com/member?token=${d.token}`
+  return `<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;background:#000;font-family:Arial,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;padding:40px 24px;">
+    <div style="text-align:center;margin-bottom:40px;">
+      <p style="color:#e11d48;font-size:11px;letter-spacing:4px;text-transform:uppercase;margin:0 0 12px;">CW Soundlab · Chicago, IL</p>
+      <h1 style="color:#fff;font-size:36px;margin:0 0 4px;">Soundlab Member</h1>
+      <p style="color:rgba(255,255,255,0.4);font-size:13px;margin:0;">Welcome to the lab, ${d.name}.</p>
+    </div>
+
+    <div style="background:#111;border:1px solid rgba(255,255,255,0.1);padding:28px;margin-bottom:24px;">
+      <p style="color:#e11d48;font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:0 0 20px;">Your Member Perks</p>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.07);color:#fff;font-size:14px;">10% off sessions</td><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.07);color:rgba(255,255,255,0.4);font-size:12px;text-align:right;">From your 2nd booking</td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.07);color:#fff;font-size:14px;">1 WAV lease beat / month</td><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.07);color:rgba(255,255,255,0.4);font-size:12px;text-align:right;">Delivered monthly</td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.07);color:#fff;font-size:14px;">10% off cleaning services</td><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.07);color:rgba(255,255,255,0.4);font-size:12px;text-align:right;">Partner discount</td></tr>
+        <tr><td style="padding:10px 0;color:#fff;font-size:14px;">10% off logos, design & artwork</td><td style="padding:10px 0;color:rgba(255,255,255,0.4);font-size:12px;text-align:right;">Partner discount</td></tr>
+      </table>
+    </div>
+
+    <div style="text-align:center;margin-bottom:32px;">
+      <p style="color:rgba(255,255,255,0.5);font-size:13px;margin:0 0 20px;">Access your member portal anytime with your personal link.</p>
+      <a href="${portalUrl}" style="display:inline-block;background:#e11d48;color:#fff;font-size:13px;letter-spacing:3px;text-transform:uppercase;text-decoration:none;padding:16px 32px;">
+        Open Member Portal
+      </a>
+      <p style="color:rgba(255,255,255,0.2);font-size:11px;margin:16px 0 0;">Bookmark this link — it's your key to all your perks.</p>
+    </div>
+
+    <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:20px;text-align:center;">
+      <p style="color:rgba(255,255,255,0.2);font-size:11px;">CW Soundlab · Chicago, IL · cwsoundlab.com</p>
     </div>
   </div>
 </body>
