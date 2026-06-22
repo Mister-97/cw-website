@@ -56,7 +56,7 @@ export default function MembershipPopup() {
           {[
             '10% off from your 2nd session',
             '1 WAV lease beat / month',
-            '10% off cleaning, design & artwork',
+            '10% off cleaning services, design & artwork',
           ].map((perk) => (
             <li key={perk} className="flex items-center gap-2.5">
               <div className="w-1 h-1 bg-cw-red rounded-full flex-shrink-0" />

@@ -375,7 +375,7 @@ export default function BookingForm() {
                   <p className="font-heading text-2xl text-black flex-shrink-0">$9.99<span className="text-gray-400 font-body text-xs">/mo</span></p>
                 </div>
                 <ul className="space-y-1 mb-4">
-                  {['10% off from your 2nd session onwards', '1 free WAV lease beat every month', '10% off partner cleaning, design & artwork'].map(p => (
+                  {['10% off from your 2nd session onwards', '1 free WAV lease beat every month', '10% off cleaning services, design & artwork'].map(p => (
                     <li key={p} className="flex items-center gap-2 font-body text-xs text-gray-500">
                       <span className="w-1 h-1 bg-cw-red rounded-full flex-shrink-0" />{p}
                     </li>
