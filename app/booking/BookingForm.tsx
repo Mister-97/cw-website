@@ -27,6 +27,7 @@ export default function BookingForm() {
   const [bookedSlots, setBookedSlots] = useState<string[]>([])
   const [slotsLoading, setSlotsLoading] = useState(false)
   const [form, setForm] = useState({ name: '', email: '', phone: '', notes: '' })
+  const [agreed, setAgreed] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -49,7 +50,7 @@ export default function BookingForm() {
 
   const canGoTo2 = selectedService !== null
   const canGoTo3 = selectedDate !== '' && selectedTime !== ''
-  const canSubmit = form.name.trim() !== '' && form.email.trim() !== '' && form.phone.trim() !== ''
+  const canSubmit = form.name.trim() !== '' && form.email.trim() !== '' && form.phone.trim() !== '' && agreed
 
   function goBack() {
     if (step === 2) setStep(1)
@@ -357,6 +358,41 @@ export default function BookingForm() {
                   className="bg-white border-2 border-black focus:border-cw-red text-black font-body text-sm px-4 py-3.5 w-full outline-none transition-colors placeholder:text-gray-300 resize-none"
                 />
               </div>
+            </div>
+
+            {/* Studio liability disclaimer */}
+            <div className="border-2 border-black p-4 mb-6 bg-gray-50">
+              <p className="font-heading text-xs tracking-widest uppercase text-black mb-3">Studio Policy</p>
+              <ul className="font-body text-xs text-gray-600 space-y-1.5 mb-4 leading-relaxed">
+                <li>• All studio equipment must be handled with care. Do not touch or adjust gear without engineer approval.</li>
+                <li>• CW Soundlab is not responsible for damage to personal instruments, hard drives, or equipment brought into the studio.</li>
+                <li>• No food or drinks near studio equipment. Water bottles with lids are permitted.</li>
+                <li>• Guests are limited to the number agreed upon at booking. Excessive guests may result in session termination without refund.</li>
+                <li>• Illegal substances are strictly prohibited on the premises.</li>
+                <li>• Any damage to studio equipment caused by the client or their guests will be billed at full replacement cost.</li>
+                <li>• Sessions end at the scheduled time. Overtime is billed at the hourly rate and subject to availability.</li>
+                <li>• The 50% deposit is non-refundable if cancelled within 24 hours of the session.</li>
+              </ul>
+              <label className="flex items-start gap-3 cursor-pointer">
+                <div
+                  onClick={() => setAgreed(a => !a)}
+                  className={`mt-0.5 w-4 h-4 border-2 flex-shrink-0 flex items-center justify-center transition-colors cursor-pointer ${
+                    agreed ? 'bg-cw-red border-cw-red' : 'border-black'
+                  }`}
+                >
+                  {agreed && (
+                    <svg className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </div>
+                <span
+                  onClick={() => setAgreed(a => !a)}
+                  className="font-body text-xs text-gray-700 leading-relaxed"
+                >
+                  I have read and agree to the studio policies above. I understand I am responsible for any damage caused by myself or my guests.
+                </span>
+              </label>
             </div>
 
             {error && (
