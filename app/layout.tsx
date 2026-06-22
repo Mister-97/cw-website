@@ -123,6 +123,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
         <Script
+          id="ga4"
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-XVC4757FML"
+        />
+        <Script
+          id="ga4-config"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XVC4757FML');`,
+          }}
+        />
+        <Script
           id="local-business-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
