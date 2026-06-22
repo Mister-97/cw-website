@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
+import AnnouncementBanner from '@/components/AnnouncementBanner'
 
 const links = [
   { href: '/', label: 'Home' },
@@ -41,6 +42,7 @@ export default function Navbar() {
           : 'bg-white border-b border-black/10 shadow-sm'
       }`}
     >
+      <AnnouncementBanner />
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center">

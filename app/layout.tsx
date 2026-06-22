@@ -3,7 +3,6 @@ import { Oswald, Inter } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import AnnouncementBanner from '@/components/AnnouncementBanner'
 import Script from 'next/script'
 
 const oswald = Oswald({
@@ -123,7 +122,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="bg-white text-black antialiased">
-        <AnnouncementBanner />
         <Navbar />
         <main>{children}</main>
         <Footer />

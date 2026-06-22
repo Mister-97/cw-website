@@ -8,7 +8,7 @@ export default function AnnouncementBanner() {
   if (dismissed) return null
 
   return (
-    <div className="bg-cw-red relative z-40">
+    <div className="bg-cw-red">
       <div className="max-w-6xl mx-auto px-4 py-2.5 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 flex-1 min-w-0">
           <div className="w-1.5 h-1.5 bg-white rounded-full flex-shrink-0 animate-pulse" />
