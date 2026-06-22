@@ -3,13 +3,13 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { bookableServices, Service } from '@/lib/services'
+import BookingCalendar from '@/components/BookingCalendar'
 
 const TIME_SLOTS = [
-  '10:00 AM', '11:00 AM', '12:00 PM',
-  '1:00 PM', '2:00 PM', '3:00 PM',
-  '4:00 PM', '5:00 PM', '6:00 PM',
-  '7:00 PM', '8:00 PM', '9:00 PM',
-  '10:00 PM', '11:00 PM',
+  '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
+  '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM',
+  '6:00 PM', '7:00 PM', '8:00 PM', '9:00 PM', '10:00 PM',
+  '11:00 PM', '12:00 AM', '1:00 AM', '2:00 AM',
 ]
 
 type Step = 1 | 2 | 3
@@ -47,7 +47,6 @@ export default function BookingForm() {
       .finally(() => setSlotsLoading(false))
   }, [selectedDate])
 
-  const today = new Date().toISOString().split('T')[0]
   const canGoTo2 = selectedService !== null
   const canGoTo3 = selectedDate !== '' && selectedTime !== ''
   const canSubmit = form.name.trim() !== '' && form.email.trim() !== '' && form.phone.trim() !== ''
@@ -226,13 +225,7 @@ export default function BookingForm() {
               <label className="block font-heading text-xs text-black tracking-widest uppercase mb-3">
                 Select Date
               </label>
-              <input
-                type="date"
-                min={today}
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                className="bg-white border-2 border-black focus:border-cw-red text-black font-body px-4 py-3.5 w-full outline-none transition-colors text-sm"
-              />
+              <BookingCalendar value={selectedDate} onChange={setSelectedDate} />
             </div>
 
             <div className="mb-8">
@@ -321,9 +314,15 @@ export default function BookingForm() {
                   <span className="font-body text-white">{selectedService?.duration}</span>
                 </div>
               </div>
-              <div className="border-t border-white/15 mt-4 pt-4 flex justify-between items-center">
-                <span className="font-heading text-sm text-white tracking-widest uppercase">Total</span>
-                <span className="font-heading text-3xl text-cw-red">${selectedService?.price}</span>
+              <div className="border-t border-white/15 mt-4 pt-4 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="font-heading text-sm text-white tracking-widest uppercase">Deposit Due Now</span>
+                  <span className="font-heading text-3xl text-cw-red">${Math.round((selectedService?.price ?? 0) / 2)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="font-body text-xs text-white/40">Remaining (cash in studio)</span>
+                  <span className="font-body text-sm text-white/40">${Math.round((selectedService?.price ?? 0) / 2)}</span>
+                </div>
               </div>
             </div>
 
@@ -382,7 +381,7 @@ export default function BookingForm() {
                     : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 }`}
               >
-                {loading ? 'Processing...' : `Pay $${selectedService?.price}`}
+                {loading ? 'Processing...' : `Pay $${Math.round((selectedService?.price ?? 0) / 2)} Deposit`}
               </button>
             </div>
 

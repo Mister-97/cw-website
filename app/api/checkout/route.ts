@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
     }
 
     const origin = req.headers.get('origin') ?? 'http://localhost:3000'
+    const deposit = Math.round(price / 2)
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -36,10 +37,10 @@ export async function POST(req: NextRequest) {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: `CW Soundlab ${serviceName}`,
-              description: `Session on ${date} at ${time} · Chicago, IL`,
+              name: `CW Soundlab ${serviceName} — 50% Deposit`,
+              description: `Session on ${date} at ${time} · Remaining $${deposit} due in cash at the studio`,
             },
-            unit_amount: Math.round(price * 100),
+            unit_amount: deposit * 100,
           },
           quantity: 1,
         },
@@ -55,6 +56,8 @@ export async function POST(req: NextRequest) {
         date,
         time,
         notes: notes ?? '',
+        fullPrice: String(price),
+        deposit: String(deposit),
       },
       success_url: `${origin}/booking/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/booking`,

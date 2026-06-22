@@ -49,11 +49,14 @@ export async function POST(req: NextRequest) {
 
   const meta = session.metadata ?? {}
 
+  const depositPaid = session.amount_total ? Math.round(session.amount_total / 100) : 0
+  const fullPrice = meta.fullPrice ? parseInt(meta.fullPrice) : depositPaid * 2
+
   const booking = {
     stripe_session_id: session.id,
     service_id: meta.serviceId ?? '',
     service_name: meta.serviceName ?? '',
-    price: session.amount_total ? Math.round(session.amount_total / 100) : 0,
+    price: fullPrice,
     date: meta.date ?? '',
     time: meta.time ?? '',
     customer_name: meta.name ?? '',
@@ -92,7 +95,8 @@ export async function POST(req: NextRequest) {
         service: booking.service_name,
         date: formattedDate,
         time: booking.time,
-        price: booking.price,
+        depositPaid,
+        remainingDue: fullPrice - depositPaid,
         notes: booking.notes,
       }),
     }),
@@ -107,7 +111,8 @@ export async function POST(req: NextRequest) {
         service: booking.service_name,
         date: formattedDate,
         time: booking.time,
-        price: booking.price,
+        depositPaid,
+        remainingDue: fullPrice - depositPaid,
         notes: booking.notes,
       }),
     }),
@@ -121,7 +126,8 @@ function customerEmailHtml(d: {
   service: string
   date: string
   time: string
-  price: number
+  depositPaid: number
+  remainingDue: number
   notes: string
 }) {
   return `<!DOCTYPE html>
@@ -141,7 +147,14 @@ function customerEmailHtml(d: {
         <tr><td style="padding:8px 0;color:#6b7280;font-size:13px;">Service</td><td style="padding:8px 0;color:#111;font-size:13px;font-weight:bold;text-align:right;">${d.service}</td></tr>
         <tr><td style="padding:8px 0;color:#6b7280;font-size:13px;">Date</td><td style="padding:8px 0;color:#111;font-size:13px;text-align:right;">${d.date}</td></tr>
         <tr><td style="padding:8px 0;color:#6b7280;font-size:13px;">Time</td><td style="padding:8px 0;color:#111;font-size:13px;text-align:right;">${d.time}</td></tr>
-        <tr style="border-top:1px solid #e5e7eb;"><td style="padding:12px 0 0;color:#111;font-size:15px;font-weight:bold;">Total Paid</td><td style="padding:12px 0 0;color:#e11d48;font-size:22px;font-weight:bold;text-align:right;">$${d.price}</td></tr>
+        <tr style="border-top:1px solid #e5e7eb;">
+          <td style="padding:12px 0 4px;color:#111;font-size:15px;font-weight:bold;">Deposit Paid</td>
+          <td style="padding:12px 0 4px;color:#e11d48;font-size:22px;font-weight:bold;text-align:right;">$${d.depositPaid}</td>
+        </tr>
+        <tr>
+          <td style="padding:4px 0;color:#6b7280;font-size:13px;">Remaining (cash in studio)</td>
+          <td style="padding:4px 0;color:#6b7280;font-size:13px;text-align:right;">$${d.remainingDue}</td>
+        </tr>
       </table>
     </div>
 
@@ -150,6 +163,7 @@ function customerEmailHtml(d: {
     <div style="background:#f9fafb;border-left:4px solid #e11d48;padding:16px;margin:24px 0;">
       <p style="margin:0;color:#374151;font-size:13px;line-height:1.6;">
         <strong>Studio Location:</strong> Chicago, IL<br>
+        Please bring <strong>$${d.remainingDue} cash</strong> to complete your payment on the day of your session.<br>
         Questions? Reply to this email or call us directly.
       </p>
     </div>
@@ -172,7 +186,8 @@ function ownerEmailHtml(d: {
   service: string
   date: string
   time: string
-  price: number
+  depositPaid: number
+  remainingDue: number
   notes: string
 }) {
   return `<!DOCTYPE html>
@@ -181,7 +196,7 @@ function ownerEmailHtml(d: {
   <div style="max-width:560px;margin:0 auto;padding:40px 24px;">
     <div style="background:#e11d48;padding:24px;margin-bottom:32px;">
       <h1 style="color:#fff;font-size:24px;margin:0;">New Booking</h1>
-      <p style="color:rgba(255,255,255,0.8);font-size:13px;margin:4px 0 0;">Payment confirmed via Stripe</p>
+      <p style="color:rgba(255,255,255,0.8);font-size:13px;margin:4px 0 0;">$${d.depositPaid} deposit paid via Stripe · $${d.remainingDue} cash due in studio</p>
     </div>
 
     <div style="border:2px solid #000;padding:24px;margin-bottom:24px;">
@@ -190,7 +205,14 @@ function ownerEmailHtml(d: {
         <tr><td style="padding:8px 0;color:#6b7280;font-size:13px;">Service</td><td style="padding:8px 0;color:#111;font-size:13px;font-weight:bold;text-align:right;">${d.service}</td></tr>
         <tr><td style="padding:8px 0;color:#6b7280;font-size:13px;">Date</td><td style="padding:8px 0;color:#111;font-size:13px;text-align:right;">${d.date}</td></tr>
         <tr><td style="padding:8px 0;color:#6b7280;font-size:13px;">Time</td><td style="padding:8px 0;color:#111;font-size:13px;text-align:right;">${d.time}</td></tr>
-        <tr style="border-top:1px solid #e5e7eb;"><td style="padding:12px 0 0;color:#111;font-weight:bold;">Amount</td><td style="padding:12px 0 0;color:#e11d48;font-size:20px;font-weight:bold;text-align:right;">$${d.price}</td></tr>
+        <tr style="border-top:1px solid #e5e7eb;">
+          <td style="padding:12px 0 4px;color:#111;font-weight:bold;">Deposit Received</td>
+          <td style="padding:12px 0 4px;color:#e11d48;font-size:20px;font-weight:bold;text-align:right;">$${d.depositPaid}</td>
+        </tr>
+        <tr>
+          <td style="padding:4px 0;color:#6b7280;font-size:13px;">Cash Due in Studio</td>
+          <td style="padding:4px 0;color:#6b7280;font-size:13px;text-align:right;">$${d.remainingDue}</td>
+        </tr>
       </table>
     </div>
 
