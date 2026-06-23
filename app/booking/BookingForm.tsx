@@ -23,6 +23,11 @@ const ENGINEERS = [
     name: 'Chubbsdaproducer',
     photo: '/team/chubbsdaproducer.jpg',
   },
+  {
+    id: 'king-mecca',
+    name: 'King Mecca',
+    photo: '/team/king-mecca.jpg',
+  },
 ]
 
 type Step = 1 | 2 | 3
@@ -243,32 +248,34 @@ export default function BookingForm() {
               <label className="block font-heading text-xs text-black tracking-widest uppercase mb-3">
                 Select Engineer
               </label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="flex gap-8 justify-center flex-wrap">
                 {ENGINEERS.map((eng) => {
                   const active = selectedEngineer === eng.id
                   return (
                     <button
                       key={eng.id}
                       onClick={() => setSelectedEngineer(eng.id)}
-                      className={`relative border-2 overflow-hidden transition-all duration-150 ${
-                        active ? 'border-cw-red' : 'border-black/20 hover:border-black'
-                      }`}
+                      className="flex flex-col items-center gap-3 group"
                     >
-                      <img
-                        src={eng.photo}
-                        alt={eng.name}
-                        className="w-full h-44 object-cover object-top"
-                      />
-                      <div className={`px-3 py-2.5 transition-colors ${active ? 'bg-cw-red' : 'bg-black'}`}>
-                        <p className="font-heading text-white text-sm tracking-wide">{eng.name}</p>
+                      <div className={`relative w-28 h-28 rounded-full overflow-hidden border-4 transition-all duration-150 ${
+                        active ? 'border-cw-red scale-105' : 'border-black/20 hover:border-black group-hover:scale-105'
+                      }`}>
+                        <img
+                          src={eng.photo}
+                          alt={eng.name}
+                          className="w-full h-full object-cover object-top"
+                        />
+                        {active && (
+                          <div className="absolute inset-0 bg-cw-red/20 flex items-center justify-center">
+                            <svg className="w-8 h-8 text-white drop-shadow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                        )}
                       </div>
-                      {active && (
-                        <div className="absolute top-2 right-2 w-6 h-6 bg-cw-red flex items-center justify-center">
-                          <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                      )}
+                      <p className={`font-heading text-sm tracking-wide transition-colors ${active ? 'text-cw-red' : 'text-black'}`}>
+                        {eng.name}
+                      </p>
                     </button>
                   )
                 })}
