@@ -12,6 +12,19 @@ const TIME_SLOTS = [
   '11:00 PM', '12:00 AM', '1:00 AM', '2:00 AM',
 ]
 
+const ENGINEERS = [
+  {
+    id: 'wizz-wizzet',
+    name: 'Wizz Wizzet',
+    photo: '/team/wizz-wizzet.jpg',
+  },
+  {
+    id: 'chubbsdaproducer',
+    name: 'Chubbsdaproducer',
+    photo: '/team/chubbsdaproducer.jpg',
+  },
+]
+
 type Step = 1 | 2 | 3
 
 export default function BookingForm() {
@@ -22,6 +35,7 @@ export default function BookingForm() {
   const [selectedService, setSelectedService] = useState<Service | null>(
     bookableServices.find((s) => s.id === preselectedId) ?? null
   )
+  const [selectedEngineer, setSelectedEngineer] = useState<string>('')
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedTime, setSelectedTime] = useState('')
   const [bookedSlots, setBookedSlots] = useState<string[]>([])
@@ -50,7 +64,7 @@ export default function BookingForm() {
   }, [selectedDate])
 
   const canGoTo2 = selectedService !== null
-  const canGoTo3 = selectedDate !== '' && selectedTime !== ''
+  const canGoTo3 = selectedDate !== '' && selectedTime !== '' && selectedEngineer !== ''
   const canSubmit = form.name.trim() !== '' && form.email.trim() !== '' && form.phone.trim() !== '' && agreed
 
   function goBack() {
@@ -76,6 +90,7 @@ export default function BookingForm() {
           email: form.email,
           phone: form.phone,
           notes: form.notes,
+          engineer: selectedEngineer,
           addMembership: interestedInMembership,
         }),
       })
@@ -226,6 +241,42 @@ export default function BookingForm() {
 
             <div className="mb-8">
               <label className="block font-heading text-xs text-black tracking-widest uppercase mb-3">
+                Select Engineer
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                {ENGINEERS.map((eng) => {
+                  const active = selectedEngineer === eng.id
+                  return (
+                    <button
+                      key={eng.id}
+                      onClick={() => setSelectedEngineer(eng.id)}
+                      className={`relative border-2 overflow-hidden transition-all duration-150 ${
+                        active ? 'border-cw-red' : 'border-black/20 hover:border-black'
+                      }`}
+                    >
+                      <img
+                        src={eng.photo}
+                        alt={eng.name}
+                        className="w-full h-44 object-cover object-top"
+                      />
+                      <div className={`px-3 py-2.5 transition-colors ${active ? 'bg-cw-red' : 'bg-black'}`}>
+                        <p className="font-heading text-white text-sm tracking-wide">{eng.name}</p>
+                      </div>
+                      {active && (
+                        <div className="absolute top-2 right-2 w-6 h-6 bg-cw-red flex items-center justify-center">
+                          <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
+            <div className="mb-8">
+              <label className="block font-heading text-xs text-black tracking-widest uppercase mb-3">
                 Select Date
               </label>
               <BookingCalendar value={selectedDate} onChange={setSelectedDate} />
@@ -303,6 +354,12 @@ export default function BookingForm() {
                 <div className="flex justify-between text-sm">
                   <span className="font-body text-white/50">Service</span>
                   <span className="font-heading text-white">{selectedService?.name}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="font-body text-white/50">Engineer</span>
+                  <span className="font-heading text-white">
+                    {ENGINEERS.find((e) => e.id === selectedEngineer)?.name ?? ''}
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="font-body text-white/50">Date</span>
