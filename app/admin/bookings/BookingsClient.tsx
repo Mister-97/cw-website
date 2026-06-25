@@ -482,7 +482,7 @@ export default function BookingsClient({ initial }: { initial: Booking[] }) {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block font-heading text-[10px] tracking-widest uppercase text-white/40 mb-1.5">Email</label>
                   <input type="email"
@@ -513,7 +513,7 @@ export default function BookingsClient({ initial }: { initial: Booking[] }) {
                 />
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="block font-heading text-[10px] tracking-widest uppercase text-white/40 mb-1.5">Date *</label>
                   <input type="date"
@@ -530,7 +530,7 @@ export default function BookingsClient({ initial }: { initial: Booking[] }) {
                     onChange={e => setNewBooking(prev => ({ ...prev, time: e.target.value }))}
                   />
                 </div>
-                <div>
+                <div className="col-span-2 sm:col-span-1">
                   <label className="block font-heading text-[10px] tracking-widest uppercase text-white/40 mb-1.5">Price ($)</label>
                   <input type="number"
                     className="w-full bg-white/5 border border-white/10 text-white px-3 py-2 font-body text-sm focus:outline-none focus:border-cw-red"
