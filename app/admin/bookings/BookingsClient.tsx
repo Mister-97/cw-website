@@ -33,6 +33,8 @@ type NewBooking = {
   status: string
 }
 
+const ENGINEERS = ['Wizz Wizzet', 'Chubbsdaproducer', 'King Mecca']
+
 const EMPTY_NEW: NewBooking = {
   customer_name: '',
   customer_email: '',
@@ -430,12 +432,14 @@ export default function BookingsClient({ initial }: { initial: Booking[] }) {
 
               <div>
                 <label className="block font-heading text-[10px] tracking-widest uppercase text-white/40 mb-1.5">Engineer</label>
-                <input
+                <select
                   className="w-full bg-white/5 border border-white/10 text-white px-3 py-2 font-body text-sm focus:outline-none focus:border-cw-red"
-                  placeholder="Assigned engineer"
                   value={editing.engineer ?? ''}
                   onChange={e => setEditing(prev => prev ? { ...prev, engineer: e.target.value } : prev)}
-                />
+                >
+                  <option value="">-- Select engineer --</option>
+                  {ENGINEERS.map(eng => <option key={eng} value={eng}>{eng}</option>)}
+                </select>
               </div>
 
               <div>
@@ -567,12 +571,14 @@ export default function BookingsClient({ initial }: { initial: Booking[] }) {
 
               <div>
                 <label className="block font-heading text-[10px] tracking-widest uppercase text-white/40 mb-1.5">Engineer</label>
-                <input
+                <select
                   className="w-full bg-white/5 border border-white/10 text-white px-3 py-2 font-body text-sm focus:outline-none focus:border-cw-red"
-                  placeholder="Assigned engineer"
                   value={newBooking.engineer}
                   onChange={e => setNewBooking(prev => ({ ...prev, engineer: e.target.value }))}
-                />
+                >
+                  <option value="">-- Select engineer --</option>
+                  {ENGINEERS.map(eng => <option key={eng} value={eng}>{eng}</option>)}
+                </select>
               </div>
 
               <div>
