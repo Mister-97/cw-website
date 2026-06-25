@@ -274,7 +274,7 @@ export default function BookingsClient({ initial, services }: { initial: Booking
                               : 'bg-red-900/40 text-red-300'
                           }`}
                         >
-                          {b.time.replace(':00', '')} {b.customer_name.split(' ')[0]}
+                          {b.customer_name} @ {b.time}
                         </div>
                       ))}
                       {dayBookings.length > 3 && (
