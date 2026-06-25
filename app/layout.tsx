@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 import { Oswald, Inter } from 'next/font/google'
 import './globals.css'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
+import ConditionalLayout from '@/components/ConditionalLayout'
 import Script from 'next/script'
 
 const oswald = Oswald({
@@ -149,9 +148,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             style={{ display: 'none', visibility: 'hidden' }}
           />
         </noscript>
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+        <ConditionalLayout>{children}</ConditionalLayout>
       </body>
     </html>
   )

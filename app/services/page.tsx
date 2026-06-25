@@ -1,6 +1,36 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { services, categories, Service } from '@/lib/services'
+import { services as staticServices, categories, Service } from '@/lib/services'
+import { supabase } from '@/lib/supabase'
+
+export const dynamic = 'force-dynamic'
+
+async function getServices(): Promise<Service[]> {
+  try {
+    const { data } = await supabase
+      .from('services')
+      .select('*')
+      .eq('active', true)
+      .order('sort_order', { ascending: true })
+
+    if (data && data.length > 0) {
+      return data.map(s => ({
+        id: s.id,
+        name: s.name,
+        description: s.description,
+        duration: s.duration,
+        durationMins: s.duration_mins,
+        price: s.price,
+        priceNote: s.price_note ?? undefined,
+        category: s.category,
+        featured: s.featured ?? false,
+        includes: s.includes ?? [],
+        bestFor: s.best_for ?? undefined,
+      }))
+    }
+  } catch {}
+  return staticServices
+}
 
 export const metadata: Metadata = {
   title: 'Recording Studio Services & Pricing in Chicago | CW Soundlab',
@@ -32,7 +62,8 @@ const categoryIcons: Record<Service['category'], string> = {
   content: 'VID',
 }
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const services = await getServices()
   return (
     <div className="min-h-screen bg-white">
 

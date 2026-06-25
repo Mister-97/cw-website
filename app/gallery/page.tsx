@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Studio Gallery | CW Soundlab Chicago Recording Studio',
@@ -14,34 +17,23 @@ export const metadata: Metadata = {
   },
 }
 
-const photos = [
-  {
-    src: '/gallery/studio-setup.png',
-    alt: 'CW Soundlab control room with KRK monitors and dual screens',
-    label: 'Control Room',
-    span: 'md:col-span-2 md:row-span-2',
-  },
-  {
-    src: '/gallery/vocal-booth.png',
-    alt: 'Vocal booth with geometric acoustic panels and condenser mic',
-    label: 'Vocal Booth',
-    span: '',
-  },
-  {
-    src: '/gallery/lounge.png',
-    alt: 'Studio lounge with hexagonal LED lights and leather sofa',
-    label: 'Artist Lounge',
-    span: '',
-  },
-  {
-    src: '/gallery/control-room.png',
-    alt: 'CW Soundlab recording setup with KRK studio monitors',
-    label: 'Recording Setup',
-    span: 'md:col-span-2',
-  },
+const staticPhotos = [
+  { src: '/gallery/studio-setup.png', alt: 'CW Soundlab control room with KRK monitors and dual screens', label: 'Control Room', span: 'md:col-span-2 md:row-span-2' },
+  { src: '/gallery/vocal-booth.png', alt: 'Vocal booth with geometric acoustic panels and condenser mic', label: 'Vocal Booth', span: '' },
+  { src: '/gallery/lounge.png', alt: 'Studio lounge with hexagonal LED lights and leather sofa', label: 'Artist Lounge', span: '' },
+  { src: '/gallery/control-room.png', alt: 'CW Soundlab recording setup with KRK studio monitors', label: 'Recording Setup', span: 'md:col-span-2' },
 ]
 
-export default function GalleryPage() {
+async function getPhotos() {
+  try {
+    const { data } = await supabase.from('gallery_photos').select('*').eq('active', true).order('sort_order', { ascending: true })
+    if (data && data.length > 0) return data
+  } catch {}
+  return staticPhotos
+}
+
+export default async function GalleryPage() {
+  const photos = await getPhotos()
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
