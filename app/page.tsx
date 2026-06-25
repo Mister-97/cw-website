@@ -144,9 +144,10 @@ export default function HomePage() {
                         Best Value
                       </span>
                     </div>
-                    <h3 className="font-heading text-2xl text-black leading-tight mb-auto group-hover:text-cw-red transition-colors">
+                    <h3 className="font-heading text-2xl text-black leading-tight group-hover:text-cw-red transition-colors">
                       {s.name}
                     </h3>
+                    <p className="font-body text-sm text-gray-500 mt-2 mb-auto leading-relaxed">{s.description}</p>
                     <div className="mt-10 pt-6 border-t-2 border-black/10">
                       <p className="font-heading text-6xl text-black mb-6">${s.price}</p>
                       <Link
