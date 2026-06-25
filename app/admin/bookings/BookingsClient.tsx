@@ -94,6 +94,7 @@ export default function BookingsClient({ initial, services }: { initial: Booking
 
   const [creating, setCreating] = useState(false)
   const [newBooking, setNewBooking] = useState<NewBooking>(EMPTY_NEW)
+  const [createError, setCreateError] = useState('')
 
   function openEdit(b: Booking) { setEditing({ ...b }) }
   function closeEdit() { setEditing(null) }
@@ -138,22 +139,27 @@ export default function BookingsClient({ initial, services }: { initial: Booking
 
   async function handleCreate() {
     setSaving(true)
+    setCreateError('')
     try {
       const res = await fetch('/api/admin/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...newBooking, price: parseInt(newBooking.price) || 0 }),
       })
+      const text = await res.text()
+      let data: Record<string, unknown> = {}
+      try { data = JSON.parse(text) } catch { /* not json */ }
       if (res.ok) {
-        const created = await res.json()
-        setBookings(prev => [created, ...prev])
+        setBookings(prev => [data as unknown as Booking, ...prev])
         setCreating(false)
         setNewBooking(EMPTY_NEW)
+        setCreateError('')
         router.refresh()
       } else {
-        const d = await res.json()
-        alert(d.error ?? 'Failed to create booking')
+        setCreateError((data.error as string) ?? `Error ${res.status}: failed to create booking`)
       }
+    } catch (e) {
+      setCreateError(e instanceof Error ? e.message : 'Network error')
     } finally { setSaving(false) }
   }
 
@@ -619,9 +625,13 @@ export default function BookingsClient({ initial, services }: { initial: Booking
                 />
               </div>
             </div>
-            <div className="border-t border-white/10 px-6 py-4 flex justify-end gap-3">
+            <div className="border-t border-white/10 px-6 py-4 space-y-3">
+              {createError && (
+                <p className="font-body text-xs text-red-400 bg-red-400/10 border border-red-400/20 px-3 py-2">{createError}</p>
+              )}
+              <div className="flex justify-end gap-3">
               <button
-                onClick={() => { setCreating(false); setNewBooking(EMPTY_NEW) }}
+                onClick={() => { setCreating(false); setNewBooking(EMPTY_NEW); setCreateError('') }}
                 className="font-heading text-xs tracking-widest uppercase px-4 py-2 border border-white/20 text-white/40 hover:text-white transition-colors"
               >
                 Cancel
@@ -633,6 +643,7 @@ export default function BookingsClient({ initial, services }: { initial: Booking
               >
                 {saving ? 'Creating...' : 'Create Booking'}
               </button>
+              </div>
             </div>
           </div>
         </div>
