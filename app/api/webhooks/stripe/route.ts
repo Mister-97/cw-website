@@ -102,6 +102,13 @@ export async function POST(req: NextRequest) {
   const customerEmail = session.customer_email ?? meta.email ?? ''
   const customerName = meta.name ?? ''
 
+  const engineerDisplay: Record<string, string> = {
+    'wizz-wizzet': 'Wizz Wizzet',
+    'chubbsdaproducer': 'Chubbsdaproducer',
+  }
+  const engineer = meta.engineer ?? ''
+  const engineerName = engineerDisplay[engineer] ?? engineer
+
   const booking = {
     stripe_session_id: session.id,
     service_id: meta.serviceId ?? '',
@@ -113,6 +120,7 @@ export async function POST(req: NextRequest) {
     customer_email: customerEmail,
     customer_phone: meta.phone ?? '',
     notes: meta.notes ?? '',
+    engineer,
     status: 'confirmed',
   }
 
@@ -188,7 +196,29 @@ export async function POST(req: NextRequest) {
       })
     : 'TBD'
 
+  const ntfyUrl = process.env.NTFY_URL
+  const ntfyPromise = ntfyUrl
+    ? fetch(ntfyUrl, {
+        method: 'POST',
+        headers: {
+          'Title': `New Booking: ${booking.service_name}`,
+          'Priority': 'high',
+          'Tags': 'studio,money_with_wings',
+          'Content-Type': 'text/plain',
+        },
+        body: [
+          `${booking.customer_name} booked ${booking.service_name}`,
+          `Engineer: ${engineerName || 'Not selected'}`,
+          `${formattedDate} at ${booking.time}`,
+          `Deposit paid: $${depositPaid} | Cash due: $${fullPrice - depositPaid}`,
+          `Phone: ${booking.customer_phone}`,
+          booking.notes ? `Notes: ${booking.notes}` : '',
+        ].filter(Boolean).join('\n'),
+      }).catch((e) => console.error('ntfy error:', e))
+    : Promise.resolve()
+
   await Promise.all([
+    ntfyPromise,
     resend.emails.send({
       from: FROM_EMAIL,
       to: customerEmail,
@@ -218,6 +248,7 @@ export async function POST(req: NextRequest) {
         depositPaid,
         remainingDue: fullPrice - depositPaid,
         notes: booking.notes,
+        engineer: engineerName,
       }),
     }),
   ])
@@ -297,6 +328,7 @@ function ownerEmailHtml(d: {
   depositPaid: number
   remainingDue: number
   notes: string
+  engineer: string
 }) {
   return `<!DOCTYPE html>
 <html>
@@ -311,6 +343,7 @@ function ownerEmailHtml(d: {
       <p style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#6b7280;margin:0 0 16px;">Session Details</p>
       <table style="width:100%;border-collapse:collapse;">
         <tr><td style="padding:8px 0;color:#6b7280;font-size:13px;">Service</td><td style="padding:8px 0;color:#111;font-size:13px;font-weight:bold;text-align:right;">${d.service}</td></tr>
+        ${d.engineer ? `<tr><td style="padding:8px 0;color:#6b7280;font-size:13px;">Engineer</td><td style="padding:8px 0;color:#e11d48;font-size:13px;font-weight:bold;text-align:right;">${d.engineer}</td></tr>` : ''}
         <tr><td style="padding:8px 0;color:#6b7280;font-size:13px;">Date</td><td style="padding:8px 0;color:#111;font-size:13px;text-align:right;">${d.date}</td></tr>
         <tr><td style="padding:8px 0;color:#6b7280;font-size:13px;">Time</td><td style="padding:8px 0;color:#111;font-size:13px;text-align:right;">${d.time}</td></tr>
         <tr style="border-top:1px solid #e5e7eb;">

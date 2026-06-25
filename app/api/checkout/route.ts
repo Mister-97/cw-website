@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json()
-    const { serviceId, serviceName, price, date, time, name, email, phone, notes, addMembership } = body as {
+    const { serviceId, serviceName, price, date, time, name, email, phone, notes, engineer, addMembership } = body as {
       serviceId: string
       serviceName: string
       price: number
@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
       email: string
       phone: string
       notes?: string
+      engineer?: string
       addMembership?: boolean
     }
 
@@ -88,6 +89,7 @@ export async function POST(req: NextRequest) {
         date,
         time,
         notes: notes ?? '',
+        engineer: engineer ?? '',
         fullPrice: String(discountedPrice),
         deposit: String(deposit),
         addMembership: addMembership && !member ? 'true' : 'false',

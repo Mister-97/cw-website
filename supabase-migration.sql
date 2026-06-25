@@ -12,9 +12,13 @@ CREATE TABLE IF NOT EXISTS bookings (
   customer_email    text NOT NULL,
   customer_phone    text NOT NULL,
   notes             text DEFAULT '',
+  engineer          text DEFAULT '',
   status            text DEFAULT 'confirmed',
   created_at        timestamptz DEFAULT now()
 );
+
+-- If the table already exists, run this to add the engineer column:
+-- ALTER TABLE bookings ADD COLUMN IF NOT EXISTS engineer text DEFAULT '';
 
 CREATE INDEX IF NOT EXISTS bookings_date_idx ON bookings(date);
 CREATE INDEX IF NOT EXISTS bookings_stripe_idx ON bookings(stripe_session_id);
