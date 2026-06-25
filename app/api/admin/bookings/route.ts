@@ -27,6 +27,7 @@ export async function POST(req: Request) {
       service_id: 'manual',
       date: body.date,
       time: body.time,
+      duration: body.duration ?? null,
       price: body.price ?? 0,
       notes: body.notes ?? '',
       engineer: body.engineer ?? null,

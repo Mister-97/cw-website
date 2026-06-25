@@ -26,12 +26,15 @@ type NewBooking = {
   service_name: string
   date: string
   time: string
+  duration: string
   price: string
   engineer: string
   notes: string
   payment_status: string
   status: string
 }
+
+type Service = { id: string; name: string; price: number; duration: string }
 
 const ENGINEERS = ['Wizz Wizzet', 'Chubbsdaproducer', 'King Mecca']
 
@@ -42,6 +45,7 @@ const EMPTY_NEW: NewBooking = {
   service_name: '',
   date: '',
   time: '',
+  duration: '',
   price: '',
   engineer: '',
   notes: '',
@@ -76,7 +80,7 @@ function getCalendarDays(year: number, month: number): (number | null)[] {
   return days
 }
 
-export default function BookingsClient({ initial }: { initial: Booking[] }) {
+export default function BookingsClient({ initial, services }: { initial: Booking[]; services: Service[] }) {
   const router = useRouter()
   const [bookings, setBookings] = useState(initial)
   const [editing, setEditing] = useState<Booking | null>(null)
@@ -505,15 +509,27 @@ export default function BookingsClient({ initial }: { initial: Booking[] }) {
 
               <div>
                 <label className="block font-heading text-[10px] tracking-widest uppercase text-white/40 mb-1.5">Service *</label>
-                <input
+                <select
                   className="w-full bg-white/5 border border-white/10 text-white px-3 py-2 font-body text-sm focus:outline-none focus:border-cw-red"
-                  placeholder="e.g. 2hr Recording Session"
                   value={newBooking.service_name}
-                  onChange={e => setNewBooking(prev => ({ ...prev, service_name: e.target.value }))}
-                />
+                  onChange={e => {
+                    const svc = services.find(s => s.name === e.target.value)
+                    setNewBooking(prev => ({
+                      ...prev,
+                      service_name: e.target.value,
+                      price: svc ? String(svc.price) : prev.price,
+                      duration: svc ? svc.duration : prev.duration,
+                    }))
+                  }}
+                >
+                  <option value="">-- Select service --</option>
+                  {services.map(s => (
+                    <option key={s.id} value={s.name}>{s.name} — ${s.price}</option>
+                  ))}
+                </select>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block font-heading text-[10px] tracking-widest uppercase text-white/40 mb-1.5">Date *</label>
                   <input type="date"
@@ -530,7 +546,16 @@ export default function BookingsClient({ initial }: { initial: Booking[] }) {
                     onChange={e => setNewBooking(prev => ({ ...prev, time: e.target.value }))}
                   />
                 </div>
-                <div className="col-span-2 sm:col-span-1">
+                <div>
+                  <label className="block font-heading text-[10px] tracking-widest uppercase text-white/40 mb-1.5">Duration</label>
+                  <input
+                    className="w-full bg-white/5 border border-white/10 text-white px-3 py-2 font-body text-sm focus:outline-none focus:border-cw-red"
+                    placeholder="e.g. 2 hrs"
+                    value={newBooking.duration}
+                    onChange={e => setNewBooking(prev => ({ ...prev, duration: e.target.value }))}
+                  />
+                </div>
+                <div>
                   <label className="block font-heading text-[10px] tracking-widest uppercase text-white/40 mb-1.5">Price ($)</label>
                   <input type="number"
                     className="w-full bg-white/5 border border-white/10 text-white px-3 py-2 font-body text-sm focus:outline-none focus:border-cw-red"
