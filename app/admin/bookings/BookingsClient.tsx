@@ -529,11 +529,11 @@ export default function BookingsClient({ initial, services }: { initial: Booking
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block font-heading text-[10px] tracking-widest uppercase text-white/40 mb-1.5">Date *</label>
                   <input type="date"
-                    className="w-full bg-white/5 border border-white/10 text-white px-3 py-2 font-body text-sm focus:outline-none focus:border-cw-red"
+                    className="w-full bg-white/5 border border-white/10 text-white px-2 py-2 font-body text-xs focus:outline-none focus:border-cw-red"
                     value={newBooking.date}
                     onChange={e => setNewBooking(prev => ({ ...prev, date: e.target.value }))}
                   />
@@ -541,7 +541,7 @@ export default function BookingsClient({ initial, services }: { initial: Booking
                 <div>
                   <label className="block font-heading text-[10px] tracking-widest uppercase text-white/40 mb-1.5">Time *</label>
                   <input type="time"
-                    className="w-full bg-white/5 border border-white/10 text-white px-3 py-2 font-body text-sm focus:outline-none focus:border-cw-red"
+                    className="w-full bg-white/5 border border-white/10 text-white px-2 py-2 font-body text-xs focus:outline-none focus:border-cw-red"
                     value={newBooking.time}
                     onChange={e => setNewBooking(prev => ({ ...prev, time: e.target.value }))}
                   />
