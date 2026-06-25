@@ -548,12 +548,16 @@ export default function BookingsClient({ initial, services }: { initial: Booking
                 </div>
                 <div>
                   <label className="block font-heading text-[10px] tracking-widest uppercase text-white/40 mb-1.5">Duration</label>
-                  <input
+                  <select
                     className="w-full bg-white/5 border border-white/10 text-white px-3 py-2 font-body text-sm focus:outline-none focus:border-cw-red"
-                    placeholder="e.g. 2 hrs"
                     value={newBooking.duration}
                     onChange={e => setNewBooking(prev => ({ ...prev, duration: e.target.value }))}
-                  />
+                  >
+                    <option value="">-- Select --</option>
+                    {['1 hr','1.5 hrs','2 hrs','3 hrs','4 hrs','5 hrs','6 hrs','7 hrs','8 hrs'].map(d => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
                   <label className="block font-heading text-[10px] tracking-widest uppercase text-white/40 mb-1.5">Price ($)</label>
