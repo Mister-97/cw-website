@@ -97,6 +97,11 @@ export default function BookingsClient({ initial, services }: { initial: Booking
   const [newBooking, setNewBooking] = useState<NewBooking>(EMPTY_NEW)
   const [createError, setCreateError] = useState('')
 
+  const [blocking, setBlocking] = useState(false)
+  const [blockForm, setBlockForm] = useState({ date: '', time: '', duration: '1 hr' })
+  const [blockError, setBlockError] = useState('')
+  const [blockSaving, setBlockSaving] = useState(false)
+
   function openEdit(b: Booking) { setEditing({ ...b }) }
   function closeEdit() { setEditing(null) }
 
@@ -164,6 +169,43 @@ export default function BookingsClient({ initial, services }: { initial: Booking
     } finally { setSaving(false) }
   }
 
+  async function handleBlock() {
+    setBlockSaving(true)
+    setBlockError('')
+    try {
+      const res = await fetch('/api/admin/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customer_name: 'Studio Block',
+          customer_email: '',
+          customer_phone: '',
+          service_name: 'Studio Block',
+          service_id: 'manual',
+          date: blockForm.date,
+          time: blockForm.time,
+          duration: blockForm.duration,
+          price: 0,
+          status: 'confirmed',
+          payment_status: 'paid',
+        }),
+      })
+      const text = await res.text()
+      let data: Record<string, unknown> = {}
+      try { data = JSON.parse(text) } catch { /* not json */ }
+      if (res.ok) {
+        setBookings(prev => [data as unknown as Booking, ...prev])
+        setBlocking(false)
+        setBlockForm({ date: '', time: '', duration: '1 hr' })
+        router.refresh()
+      } else {
+        setBlockError((data.error as string) ?? `Error ${res.status}`)
+      }
+    } catch (e) {
+      setBlockError(e instanceof Error ? e.message : 'Network error')
+    } finally { setBlockSaving(false) }
+  }
+
   function prevMonth() {
     setCalMonth(prev => prev.month === 0
       ? { year: prev.year - 1, month: 11 }
@@ -220,6 +262,12 @@ export default function BookingsClient({ initial, services }: { initial: Booking
                 List
               </button>
             </div>
+            <button
+              onClick={() => setBlocking(true)}
+              className="border border-white/20 text-white/50 hover:text-white hover:border-white/40 font-heading text-[10px] tracking-widest uppercase px-4 py-2 transition-colors"
+            >
+              Block Out
+            </button>
             <button
               onClick={() => setCreating(true)}
               className="bg-cw-red hover:bg-red-700 text-white font-heading text-[10px] tracking-widest uppercase px-4 py-2 transition-colors"
@@ -470,6 +518,70 @@ export default function BookingsClient({ initial, services }: { initial: Booking
               <button onClick={handleSave} disabled={saving} className="bg-cw-red hover:bg-red-700 text-white font-heading text-xs tracking-widest uppercase px-6 py-2 transition-colors disabled:opacity-50">
                 {saving ? 'Saving...' : 'Save Changes'}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Block Out Modal */}
+      {blocking && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+          <div className="bg-[#111] border border-white/10 w-full max-w-sm">
+            <div className="border-b border-white/10 px-6 py-4 flex items-center justify-between">
+              <div>
+                <h2 className="font-heading text-lg text-white tracking-wider">Block Out Studio</h2>
+                <p className="font-body text-white/30 text-xs mt-0.5">Reserve time without a booking</p>
+              </div>
+              <button onClick={() => { setBlocking(false); setBlockError('') }} className="text-white/40 hover:text-white text-xl leading-none">&times;</button>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block font-heading text-[10px] tracking-widest uppercase text-white/40 mb-1.5">Date *</label>
+                <input type="date"
+                  className="w-full bg-white/5 border border-white/10 text-white px-3 py-2 font-body text-sm focus:outline-none focus:border-cw-red"
+                  value={blockForm.date}
+                  onChange={e => setBlockForm(prev => ({ ...prev, date: e.target.value }))}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-heading text-[10px] tracking-widest uppercase text-white/40 mb-1.5">Start Time *</label>
+                  <input type="time"
+                    className="w-full bg-white/5 border border-white/10 text-white px-3 py-2 font-body text-sm focus:outline-none focus:border-cw-red"
+                    value={blockForm.time}
+                    onChange={e => setBlockForm(prev => ({ ...prev, time: e.target.value }))}
+                  />
+                </div>
+                <div>
+                  <label className="block font-heading text-[10px] tracking-widest uppercase text-white/40 mb-1.5">Duration</label>
+                  <select
+                    className="w-full bg-white/5 border border-white/10 text-white px-3 py-2 font-body text-sm focus:outline-none focus:border-cw-red"
+                    value={blockForm.duration}
+                    onChange={e => setBlockForm(prev => ({ ...prev, duration: e.target.value }))}
+                  >
+                    {['1 hr','1.5 hrs','2 hrs','3 hrs','4 hrs','5 hrs','6 hrs','7 hrs','8 hrs'].map(d => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="border-t border-white/10 px-6 py-4 space-y-3">
+              {blockError && (
+                <p className="font-body text-xs text-red-400 bg-red-400/10 border border-red-400/20 px-3 py-2">{blockError}</p>
+              )}
+              <div className="flex justify-end gap-3">
+                <button onClick={() => { setBlocking(false); setBlockError('') }} className="font-heading text-xs tracking-widest uppercase px-4 py-2 border border-white/20 text-white/40 hover:text-white transition-colors">
+                  Cancel
+                </button>
+                <button
+                  onClick={handleBlock}
+                  disabled={blockSaving || !blockForm.date || !blockForm.time}
+                  className="bg-white/10 hover:bg-white/20 text-white font-heading text-xs tracking-widest uppercase px-6 py-2 transition-colors disabled:opacity-50"
+                >
+                  {blockSaving ? 'Blocking...' : 'Block Out'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
