@@ -89,7 +89,8 @@ export default function BookingsClient({ initial, services }: { initial: Booking
   const [view, setView] = useState<'calendar' | 'list'>('calendar')
 
   const now = new Date()
-  const [calMonth, setCalMonth] = useState({ year: now.getFullYear(), month: now.getMonth() })
+  const nowCST = new Date(now.toLocaleString('en-US', { timeZone: 'America/Chicago' }))
+  const [calMonth, setCalMonth] = useState({ year: nowCST.getFullYear(), month: nowCST.getMonth() })
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
 
   const [creating, setCreating] = useState(false)
@@ -181,13 +182,14 @@ export default function BookingsClient({ initial, services }: { initial: Booking
   }
 
   const calDays = getCalendarDays(calMonth.year, calMonth.month)
-  const todayStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`
+  const todayStr = nowCST.toLocaleDateString('en-CA', { timeZone: 'America/Chicago' })
 
   const filtered = bookings
     .filter(b => filter === 'all' || b.status === filter)
     .filter(b => !selectedDay || b.date === selectedDay)
 
-  const upcoming = bookings.filter(b => b.status === 'confirmed' && new Date(b.date) >= new Date()).length
+  const todayCST = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Chicago' }) // YYYY-MM-DD
+  const upcoming = bookings.filter(b => b.status === 'confirmed' && b.date >= todayCST).length
   const unpaidCount = bookings.filter(b => (b.payment_status === 'unpaid' || !b.payment_status) && b.status !== 'cancelled').length
 
   return (
@@ -629,6 +631,16 @@ export default function BookingsClient({ initial, services }: { initial: Booking
               {createError && (
                 <p className="font-body text-xs text-red-400 bg-red-400/10 border border-red-400/20 px-3 py-2">{createError}</p>
               )}
+              {!createError && (() => {
+                const missing = []
+                if (!newBooking.customer_name) missing.push('Client Name')
+                if (!newBooking.service_name) missing.push('Service')
+                if (!newBooking.date) missing.push('Date')
+                if (!newBooking.time) missing.push('Time')
+                return missing.length > 0 ? (
+                  <p className="font-body text-xs text-white/30">Required: {missing.join(', ')}</p>
+                ) : null
+              })()}
               <div className="flex justify-end gap-3">
               <button
                 onClick={() => { setCreating(false); setNewBooking(EMPTY_NEW); setCreateError('') }}
