@@ -239,21 +239,21 @@ export default function BookingsClient({ initial, services }: { initial: Booking
       <div className="max-w-6xl mx-auto px-6 pt-16 pb-10">
 
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="font-heading text-3xl text-white">Bookings</h1>
-            <p className="font-body text-white/40 text-sm mt-1">
-              {bookings.length} total &middot; <span className="text-green-400">{upcoming} upcoming</span>
-              {unpaidCount > 0 && <> &middot; <span className="text-red-400">{unpaidCount} unpaid</span></>}
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="flex border border-white/10">
+        <div className="flex flex-col gap-4 mb-8">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h1 className="font-heading text-3xl text-white">Bookings</h1>
+              <p className="font-body text-white/40 text-sm mt-1">
+                {bookings.length} total &middot; <span className="text-green-400">{upcoming} upcoming</span>
+                {unpaidCount > 0 && <> &middot; <span className="text-red-400">{unpaidCount} unpaid</span></>}
+              </p>
+            </div>
+            <div className="flex border border-white/10 flex-shrink-0">
               <button
                 onClick={() => setView('calendar')}
                 className={`font-heading text-[10px] tracking-widest uppercase px-3 py-1.5 transition-colors ${view === 'calendar' ? 'bg-cw-red text-white' : 'text-white/40 hover:text-white'}`}
               >
-                Calendar
+                Cal
               </button>
               <button
                 onClick={() => setView('list')}
@@ -262,15 +262,17 @@ export default function BookingsClient({ initial, services }: { initial: Booking
                 List
               </button>
             </div>
+          </div>
+          <div className="flex gap-2">
             <button
               onClick={() => setBlocking(true)}
-              className="border border-white/20 text-white/50 hover:text-white hover:border-white/40 font-heading text-[10px] tracking-widest uppercase px-4 py-2 transition-colors"
+              className="flex-1 border border-white/20 text-white/50 hover:text-white hover:border-white/40 font-heading text-[10px] tracking-widest uppercase px-3 py-2 transition-colors"
             >
               Block Out
             </button>
             <button
               onClick={() => setCreating(true)}
-              className="bg-cw-red hover:bg-red-700 text-white font-heading text-[10px] tracking-widest uppercase px-4 py-2 transition-colors"
+              className="flex-1 bg-cw-red hover:bg-red-700 text-white font-heading text-[10px] tracking-widest uppercase px-3 py-2 transition-colors"
             >
               + Add Booking
             </button>
